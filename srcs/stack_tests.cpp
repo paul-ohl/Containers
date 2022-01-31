@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:01:45 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 14:15:53 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 14:20:26 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,21 +157,62 @@ TEST_GROUP(StackModifiers)
 
 TEST(StackModifiers, Push)
 {
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
 	std_int_stack.push(1);
 	ft_int_stack.push(1);
 	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
 	std_int_stack.push(2);
 	ft_int_stack.push(2);
 	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
 	std_int_stack.push(12);
 	ft_int_stack.push(12);
 	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
 	std_int_stack.push(21);
 	ft_int_stack.push(21);
 	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
 	std_int_stack.push(42);
 	ft_int_stack.push(42);
 	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
+}
+
+TEST(StackModifiers, Pop)
+{
+	std_int_stack.push(1);
+	ft_int_stack.push(1);
+	std_int_stack.push(2);
+	ft_int_stack.push(2);
+	std_int_stack.push(12);
+	ft_int_stack.push(12);
+	std_int_stack.push(21);
+	ft_int_stack.push(21);
+	std_int_stack.push(42);
+	ft_int_stack.push(42);
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
+	std_int_stack.pop();
+	ft_int_stack.pop();
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
+	std_int_stack.pop();
+	ft_int_stack.pop();
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
+	std_int_stack.pop();
+	ft_int_stack.pop();
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
+	std_int_stack.pop();
+	ft_int_stack.pop();
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
+	std_int_stack.pop();
+	ft_int_stack.pop();
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
 }
 
 IGNORE_TEST(StackModifiers, BigPush)
