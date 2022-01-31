@@ -113,3 +113,21 @@ TEST(StackAccessors, Top)
 	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
 	CHECK_EQUAL(std_string_stack.top(), ft_string_stack.top());
 }
+
+TEST(StackAccessors, Size)
+{
+	std::stack<int, std::list<int> >					std_int_stack(int_list);
+	std::stack<std::string, std::list<std::string> >	std_string_stack(string_list);
+	ft::stack<int, std::list<int> >						ft_int_stack(int_list);
+	ft::stack<std::string, std::list<std::string> >		ft_string_stack(string_list);
+
+	std::stack<int>			std_empty_int_stack;
+	std::stack<std::string>	std_empty_string_stack;
+	ft::stack<int>			ft_empty_int_stack;
+	ft::stack<std::string>	ft_empty_string_stack;
+
+	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
+	CHECK_EQUAL(std_string_stack.size(), ft_string_stack.size());
+	CHECK_EQUAL(std_empty_int_stack.size(), ft_empty_int_stack.size());
+	CHECK_EQUAL(std_empty_string_stack.size(), ft_empty_string_stack.size());
+}
