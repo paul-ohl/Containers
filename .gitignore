@@ -1,0 +1,10 @@
+tags
+.DS_Store
+a.out*
+objs/
+deps/
+*testest*
+ft_containers
+tree_visualisation.mmd
+.cache
+compile_commands.json
