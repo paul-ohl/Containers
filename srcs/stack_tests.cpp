@@ -6,18 +6,20 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:01:45 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 13:40:41 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 14:15:53 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 
 #include <typeinfo>
-#include "CppUTest/TestHarness.h"
-#include "CppUTest/UtestMacros.h"
 #include <list>
+#include <ctime>
 #include <stack>
 #include "stack.hpp"
+#include "CppUTest/TestHarness.h"
+#include "CppUTest/UtestMacros.h"
+#include "testUtils.hpp"
 
 TEST_GROUP(StackMemberFunctions)
 {
@@ -170,4 +172,20 @@ TEST(StackModifiers, Push)
 	std_int_stack.push(42);
 	ft_int_stack.push(42);
 	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+}
+
+IGNORE_TEST(StackModifiers, BigPush)
+{
+	time_t	time_svg;
+	double	std_time, ft_time;
+
+	time_svg = time(NULL);
+	for (int i = 0; i < 15000000; i++)
+		std_int_stack.push(i);
+	std_time = difftime(time(NULL), time_svg);
+	time_svg = time(NULL);
+	for (int i = 0; i < 15000000; i++)
+		ft_int_stack.push(i);
+	ft_time = difftime(time(NULL), time_svg);
+	CHECK_TEXT(ft_time / std_time < MAX_TIME_DIFFERENCE, getTimeDiffAsString(std_time, ft_time).c_str());
 }
