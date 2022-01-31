@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:01:45 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 14:20:26 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 14:39:46 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,59 @@ TEST(StackModifiers, Pop)
 	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
 }
 
-IGNORE_TEST(StackModifiers, BigPush)
+template<typename U, typename V>
+void	checkAllOperators(U std_container1, U std_container2, V ft_container1, V ft_container2)
+{
+	CHECK_EQUAL((std_container1 == std_container2), (ft_container1 == ft_container2));
+	CHECK_EQUAL((std_container1 != std_container2), (ft_container1 != ft_container2));
+	CHECK_EQUAL((std_container1 < std_container2), (ft_container1 < ft_container2));
+	CHECK_EQUAL((std_container1 > std_container2), (ft_container1 > ft_container2));
+	CHECK_EQUAL((std_container1 <= std_container2), (ft_container1 <= ft_container2));
+	CHECK_EQUAL((std_container1 >= std_container2), (ft_container1 >= ft_container2));
+}
+
+TEST_GROUP(StackNonMemberTypes)
+{
+};
+
+TEST(StackNonMemberTypes, Operators)
+{
+	std::stack<int>			std_int_stack1;
+	std::stack<int>			std_int_stack2;
+	ft::stack<int>			ft_int_stack1;
+	ft::stack<int>			ft_int_stack2;
+
+	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
+	std_int_stack1.push(1);
+	std_int_stack2.push(1);
+	ft_int_stack1.push(1);
+	ft_int_stack2.push(1);
+	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
+	std_int_stack1.push(3);
+	std_int_stack2.push(2);
+	ft_int_stack1.push(3);
+	ft_int_stack2.push(2);
+	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
+	std_int_stack1.pop();
+	std_int_stack2.pop();
+	ft_int_stack1.pop();
+	ft_int_stack2.pop();
+	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
+	std_int_stack1.push(3);
+	ft_int_stack1.push(3);
+	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
+	std_int_stack1.pop();
+	ft_int_stack1.pop();
+	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
+	std_int_stack2.push(2);
+	ft_int_stack2.push(2);
+	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
+	std_int_stack2.pop();
+	ft_int_stack2.pop();
+	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
+}
+
+TEST(StackModifiers, BigPush)
 {
 	time_t	time_svg;
 	double	std_time, ft_time;

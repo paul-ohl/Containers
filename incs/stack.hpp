@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:18:28 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 14:19:21 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 14:37:22 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,31 @@ public:
 	void	pop( void )
 	{
 		c.pop_back();
+	}
+
+	friend bool	operator==(const stack &lhs, const stack &rhs)
+	{
+		return lhs.c == rhs.c;
+	}
+	friend bool	operator!=(const stack &lhs, const stack &rhs)
+	{
+		return !(lhs == rhs);
+	}
+	friend bool	operator<(const stack &lhs, const stack &rhs)
+	{
+		return lhs.c < rhs.c;
+	}
+	friend bool	operator>(const stack &lhs, const stack &rhs)
+	{
+		return rhs < lhs;
+	}
+	friend bool	operator<=(const stack &lhs, const stack &rhs)
+	{
+		return !(lhs > rhs);
+	}
+	friend bool	operator>=(const stack &lhs, const stack &rhs)
+	{
+		return !(lhs < rhs);
 	}
 
 };
