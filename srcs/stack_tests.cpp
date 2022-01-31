@@ -6,11 +6,12 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:01:45 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 14:39:46 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 14:51:07 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
+#include <iomanip>
 
 #include <typeinfo>
 #include <list>
@@ -265,20 +266,4 @@ TEST(StackNonMemberTypes, Operators)
 	std_int_stack2.pop();
 	ft_int_stack2.pop();
 	checkAllOperators(std_int_stack1, std_int_stack2, ft_int_stack1, ft_int_stack2);
-}
-
-TEST(StackModifiers, BigPush)
-{
-	time_t	time_svg;
-	double	std_time, ft_time;
-
-	time_svg = time(NULL);
-	for (int i = 0; i < 15000000; i++)
-		std_int_stack.push(i);
-	std_time = difftime(time(NULL), time_svg);
-	time_svg = time(NULL);
-	for (int i = 0; i < 15000000; i++)
-		ft_int_stack.push(i);
-	ft_time = difftime(time(NULL), time_svg);
-	CHECK_TEXT(ft_time / std_time < MAX_TIME_DIFFERENCE, getTimeDiffAsString(std_time, ft_time).c_str());
 }
