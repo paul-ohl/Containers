@@ -144,3 +144,30 @@ TEST(StackAccessors, Empty)
 	CHECK_EQUAL(std_empty_int_stack.empty(), ft_empty_int_stack.empty());
 	CHECK_EQUAL(std_empty_string_stack.empty(), ft_empty_string_stack.empty());
 }
+
+TEST_GROUP(StackModifiers)
+{
+	std::stack<int>			std_int_stack;
+	std::stack<std::string>	std_string_stack;
+	ft::stack<int>			ft_int_stack;
+	ft::stack<std::string>	ft_string_stack;
+};
+
+TEST(StackModifiers, Push)
+{
+	std_int_stack.push(1);
+	ft_int_stack.push(1);
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	std_int_stack.push(2);
+	ft_int_stack.push(2);
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	std_int_stack.push(12);
+	ft_int_stack.push(12);
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	std_int_stack.push(21);
+	ft_int_stack.push(21);
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	std_int_stack.push(42);
+	ft_int_stack.push(42);
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+}

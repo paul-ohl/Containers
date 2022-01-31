@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:18:28 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 13:38:20 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 13:43:13 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ public:
 
 	bool		empty( void ) const { return c.empty(); }
 	size_type	size( void ) const { return c.size(); }
+
+	void	push( const value_type &value )
+	{
+		c.push_back(value);
+	}
 
 };
 
