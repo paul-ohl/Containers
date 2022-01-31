@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:01:45 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 13:29:43 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 13:40:41 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,11 @@ TEST_GROUP(StackAccessors)
 {
 	std::list<int>			int_list;
 	std::list<std::string>	string_list;
+	std::stack<int>			std_empty_int_stack;
+	std::stack<std::string>	std_empty_string_stack;
+	ft::stack<int>			ft_empty_int_stack;
+	ft::stack<std::string>	ft_empty_string_stack;
+
 
 	void	setup()
 	{
@@ -121,13 +126,21 @@ TEST(StackAccessors, Size)
 	ft::stack<int, std::list<int> >						ft_int_stack(int_list);
 	ft::stack<std::string, std::list<std::string> >		ft_string_stack(string_list);
 
-	std::stack<int>			std_empty_int_stack;
-	std::stack<std::string>	std_empty_string_stack;
-	ft::stack<int>			ft_empty_int_stack;
-	ft::stack<std::string>	ft_empty_string_stack;
-
 	CHECK_EQUAL(std_int_stack.size(), ft_int_stack.size());
 	CHECK_EQUAL(std_string_stack.size(), ft_string_stack.size());
 	CHECK_EQUAL(std_empty_int_stack.size(), ft_empty_int_stack.size());
 	CHECK_EQUAL(std_empty_string_stack.size(), ft_empty_string_stack.size());
+}
+
+TEST(StackAccessors, Empty)
+{
+	std::stack<int, std::list<int> >					std_int_stack(int_list);
+	std::stack<std::string, std::list<std::string> >	std_string_stack(string_list);
+	ft::stack<int, std::list<int> >						ft_int_stack(int_list);
+	ft::stack<std::string, std::list<std::string> >		ft_string_stack(string_list);
+
+	CHECK_EQUAL(std_int_stack.empty(), ft_int_stack.empty());
+	CHECK_EQUAL(std_string_stack.empty(), ft_string_stack.empty());
+	CHECK_EQUAL(std_empty_int_stack.empty(), ft_empty_int_stack.empty());
+	CHECK_EQUAL(std_empty_string_stack.empty(), ft_empty_string_stack.empty());
 }
