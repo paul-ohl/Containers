@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:18:28 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 12:11:02 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 12:26:01 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ public:
 			this->c = other.c;
 		return *this;
 	}
+
+	reference		top( void ) { return c.back(); }
+	const_reference	top( void ) const { return c.back(); }
 
 };
 

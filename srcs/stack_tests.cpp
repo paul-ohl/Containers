@@ -6,11 +6,11 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:01:45 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 12:10:48 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 13:29:43 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/* #include <iostream> */
+#include <iostream>
 
 #include <typeinfo>
 #include "CppUTest/TestHarness.h"
@@ -83,4 +83,33 @@ TEST(StackMemberTypes, TestTypes)
 	CHECK_TRUE( (typeid(std::stack<std::string>::size_type) == typeid(ft::stack<std::string>::size_type)) );
 	CHECK_TRUE( (typeid(std::stack<std::string>::reference) == typeid(ft::stack<std::string>::reference)) );
 	CHECK_TRUE( (typeid(std::stack<std::string>::const_reference) == typeid(ft::stack<std::string>::const_reference)) );
+}
+
+TEST_GROUP(StackAccessors)
+{
+	std::list<int>			int_list;
+	std::list<std::string>	string_list;
+
+	void	setup()
+	{
+		for (int i = 0; i <= 48; i += 7)
+			int_list.push_back(i);
+		string_list.push_back("Hi");
+		string_list.push_back("How are you?");
+		string_list.push_back("I'm fine and you?");
+		string_list.push_back("Really good thanks. And you?");
+		string_list.push_back("Amazing, I just finished ft_services!");
+		string_list.push_back("That's cool! Me too");
+	}
+};
+
+TEST(StackAccessors, Top)
+{
+	std::stack<int, std::list<int> >					std_int_stack(int_list);
+	std::stack<std::string, std::list<std::string> >	std_string_stack(string_list);
+	ft::stack<int, std::list<int> >						ft_int_stack(int_list);
+	ft::stack<std::string, std::list<std::string> >		ft_string_stack(string_list);
+
+	CHECK_EQUAL(std_int_stack.top(), ft_int_stack.top());
+	CHECK_EQUAL(std_string_stack.top(), ft_string_stack.top());
 }
