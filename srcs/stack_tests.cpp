@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:01:45 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 11:50:32 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 12:10:48 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,52 @@
 #include <stack>
 #include "stack.hpp"
 
-TEST_GROUP(StackConstructor)
+TEST_GROUP(StackMemberFunctions)
 {
 };
 
-TEST(StackConstructor, EmptyConstructor)
+TEST(StackMemberFunctions, EmptyConstructor)
 {
-	std::stack<int> std_int_stack;
-	ft::stack<int> int_stack;
-	std::stack<std::string> std_string_stack;
-	ft::stack<std::string> string_stack;
-	std::stack<int, std::list<int> > std_list_stack;
-	ft::stack<int, std::list<int> > list_stack;
+	std::stack<int>	std_int_stack;
+	ft::stack<int>	int_stack;
+	std::stack<std::string>	std_string_stack;
+	ft::stack<std::string>	string_stack;
+	std::stack<int, std::list<int> >	std_list_stack;
+	ft::stack<int, std::list<int> >		list_stack;
+
 	CHECK_TRUE( typeid(std::stack<int, std::list<int> >::container_type) == typeid(ft::stack<int, std::list<int> >::container_type) );
 }
 
-TEST(StackConstructor, ContainerConstructor)
+TEST(StackMemberFunctions, ContainerConstructor)
 {
-	std::list<int> std_list(10, 2);
-	std::stack<int, std::list<int> > std_int_stack(std_list);
-	ft::stack<int, std::list<int> > int_stack(std_list);
+	std::list<int>	std_int_list(10, 2);
+
+	std::stack<int, std::list<int> >	std_int_stack(std_int_list);
+	ft::stack<int, std::list<int> >		int_stack(std_int_list);
+
+
+	std::list<std::string>	std_string_list(10, "hi");
+
+	std::stack<std::string, std::list<std::string> >	std_string_stack(std_string_list);
+	ft::stack<std::string, std::list<std::string> >		string_stack(std_string_list);
+}
+
+TEST(StackMemberFunctions, CopyConstructor)
+{
+	std::stack<int>	std_int_stack;
+	std::stack<int> std_copy_stack(std_int_stack);
+	ft::stack<int>	int_stack;
+	ft::stack<int>	int_copy_stack(int_stack);
+}
+
+TEST(StackMemberFunctions, EqualOperator)
+{
+	std::stack<int>	std_int_stack;
+	std::stack<int> std_copy_stack;
+	std_int_stack = std_copy_stack;
+	ft::stack<int>	int_stack;
+	ft::stack<int>	int_copy_stack;
+	int_stack = int_copy_stack;
 }
 
 TEST_GROUP(StackMemberTypes)

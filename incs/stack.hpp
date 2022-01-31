@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:18:28 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 11:40:16 by pohl             ###   ########.fr       */
+/*   Updated: 2022/01/31 12:11:02 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,15 @@ public:
 		c(container)
 	{
 		return;
+	}
+ 	stack<T, Container>( const stack<T>& other ) { *this = other; }
+	~stack<T, Container>( void ) { }
+
+	stack		&operator=( const stack<T> &other )
+	{
+		if (this != &other)
+			this->c = other.c;
+		return *this;
 	}
 
 };
