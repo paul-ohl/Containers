@@ -44,7 +44,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "Linking $(NAME)"
-	$(CC) $^ -o $@ $(LDFLAGS)
+	@$(CC) $^ -o $@ $(LDFLAGS)
 
 # Object directory generation
 $O:
@@ -59,7 +59,7 @@ $(OBJS): $O%.o:$S% | $O $D
 	@mkdir -p $(@D)
 	@mkdir -p $(@D:$O%=$D%)
 	@echo "Compiling $@"
-	$(CC) $(CFLAGS) $(DFLAGS) -c $(@:$O%.o=$S%) -o $@
+	@$(CC) $(CFLAGS) $(DFLAGS) -c $(@:$O%.o=$S%) -o $@
 
 .PHONY: clean
 clean:
