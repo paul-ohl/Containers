@@ -8,4 +8,4 @@ ft_containers
 tree_visualisation.mmd
 .cache
 compile_commands.json
-./speedtests/bin/
+speedtests/bin/
