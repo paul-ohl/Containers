@@ -6,21 +6,16 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 11:01:45 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 14:51:07 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/02 09:47:49 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <iomanip>
-
 #include <typeinfo>
 #include <list>
-#include <ctime>
 #include <stack>
 #include "stack.hpp"
 #include "CppUTest/TestHarness.h"
 #include "CppUTest/UtestMacros.h"
-#include "testUtils.hpp"
 
 TEST_GROUP(StackMemberFunctions)
 {
