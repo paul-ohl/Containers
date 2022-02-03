@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:47:15 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/03 14:54:05 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/03 17:35:10 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,28 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTest/UtestMacros.h"
 
-template< typename StdContainer, typename FtContainer >
-void	compareContent( StdContainer stdVector, FtContainer ftContainer, bool print = false )
+template< typename StdVector, typename FtVector >
+void	compareContent( StdVector stdVector, FtVector ftVector, bool print = false )
 {
-	typename StdContainer::iterator	std_begin, std_end;
-	typename FtContainer::iterator	ft_begin, ft_end;
+	typename StdVector::iterator	std_begin, std_end;
+	typename FtVector::iterator	ft_begin, ft_end;
 	std_begin = stdVector.begin();
 	std_end = stdVector.end();
-	ft_begin = ftContainer.begin();
-	ft_end = ftContainer.end();
+	ft_begin = ftVector.begin();
+	ft_end = ftVector.end();
 	if (print)
 		std::cout << "std | ft" << std::endl;
+	else
+	{
+		CHECK_EQUAL(stdVector.size(), ftVector.size());
+		CHECK_EQUAL(stdVector.max_size() , ftVector.max_size());
+	}
 	while (std_begin != std_end)
 	{
-		if (!print)
-			CHECK_EQUAL(*std_begin, *ft_begin);
 		if (print)
 			std::cout << *std_begin << " | " << *ft_begin << std::endl;
+		else
+			CHECK_EQUAL(*std_begin, *ft_begin);
 		std_begin++;
 		ft_begin++;
 	}
@@ -67,10 +72,8 @@ TEST(VectorMemberFunctions, ValueConstructorSizeOnly)
 	std::vector<std::string>	std_string_vector(21);
 	ft::vector<std::string>		ft_string_vector(21);
 
-	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
-	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());
-	CHECK_EQUAL(std_int_vector.front(), ft_int_vector.front());
-	CHECK_EQUAL(std_string_vector.front(), ft_string_vector.front());
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
 }
 
 TEST(VectorMemberFunctions, ValueConstructorSizeWithValue)
@@ -80,12 +83,8 @@ TEST(VectorMemberFunctions, ValueConstructorSizeWithValue)
 	std::vector<std::string>	std_string_vector(21, "ft");
 	ft::vector<std::string>		ft_string_vector(21, "ft");
 
-	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
-	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());
-	CHECK_EQUAL(std_int_vector.front(), ft_int_vector.front());
-	CHECK_EQUAL(std_string_vector.front(), ft_string_vector.front());
-	CHECK_EQUAL(std_int_vector.back(), ft_int_vector.back());
-	CHECK_EQUAL(std_string_vector.back(), ft_string_vector.back());
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
 }
 
 TEST(VectorMemberFunctions, ValueConstructorIteratorRange)
@@ -97,21 +96,14 @@ TEST(VectorMemberFunctions, ValueConstructorIteratorRange)
 	std::vector<std::string>	std_string_vector(string_list.begin(), string_list.end());
 	ft::vector<std::string>		ft_string_vector(string_list.begin(), string_list.end());
 
-	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
-	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());
 	compareContent(std_int_vector, ft_int_vector);
 	compareContent(std_string_vector, ft_string_vector);
 
 	int_list.clear();
 	string_list.clear();
 
-	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
-	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());
-	ft_int_vector.insert(ft_int_vector.begin(), 21);
-	std_int_vector.insert(std_int_vector.begin(), 21);
 	compareContent(std_int_vector, ft_int_vector);
 	compareContent(std_string_vector, ft_string_vector);
-
 }
 
 TEST(VectorMemberFunctions, CopyConstructor)
@@ -126,24 +118,16 @@ TEST(VectorMemberFunctions, CopyConstructor)
 	std::vector<std::string>	std_string_copy_vector(std_string_vector);
 	ft::vector<std::string>		ft_string_copy_vector(ft_string_vector);
 
-	CHECK_EQUAL(std_int_copy_vector.size(), ft_int_copy_vector.size());
-	CHECK_EQUAL(std_string_copy_vector.size(), ft_string_copy_vector.size());
-	CHECK_EQUAL(std_int_copy_vector.front(), ft_int_copy_vector.front());
-	CHECK_EQUAL(std_string_copy_vector.front(), ft_string_copy_vector.front());
-	CHECK_EQUAL(std_int_copy_vector.back(), ft_int_copy_vector.back());
-	CHECK_EQUAL(std_string_copy_vector.back(), ft_string_copy_vector.back());
+	compareContent(std_int_copy_vector, ft_int_copy_vector);
+	compareContent(std_string_copy_vector, ft_string_copy_vector);
 
 	std_int_vector.pop_back();
 	ft_int_vector.pop_back();
 	std_string_vector.pop_back();
 	ft_string_vector.pop_back();
 
-	CHECK_EQUAL(std_int_copy_vector.size(), ft_int_copy_vector.size());
-	CHECK_EQUAL(std_string_copy_vector.size(), ft_string_copy_vector.size());
-	CHECK_EQUAL(std_int_copy_vector.front(), ft_int_copy_vector.front());
-	CHECK_EQUAL(std_string_copy_vector.front(), ft_string_copy_vector.front());
-	CHECK_EQUAL(std_int_copy_vector.back(), ft_int_copy_vector.back());
-	CHECK_EQUAL(std_string_copy_vector.back(), ft_string_copy_vector.back());
+	compareContent(std_int_copy_vector, ft_int_copy_vector);
+	compareContent(std_string_copy_vector, ft_string_copy_vector);
 }
 
 TEST(VectorMemberFunctions, ValueConstructorTricky)
@@ -157,8 +141,7 @@ TEST(VectorMemberFunctions, ValueConstructorTricky)
 
 	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
 	CHECK_EQUAL(std_string_copy_vector.size(), ft_string_copy_vector.size());
-	CHECK_EQUAL(std_string_copy_vector.front(), ft_string_copy_vector.front());
-	CHECK_EQUAL(std_string_copy_vector.back(), ft_string_copy_vector.back());
+	compareContent(std_string_copy_vector, ft_string_copy_vector);
 }
 
 TEST(VectorMemberFunctions, EqualOperator)
@@ -206,10 +189,6 @@ TEST_GROUP(VectorIterators)
 	std::vector<std::string>	std_string_vector;
 	ft::vector<std::string>		ft_string_vector;
 
-	std::vector<int>::iterator			std_int_vector_iterator;
-	ft::vector<int>::iterator			ft_int_vector_iterator;
-	std::vector<std::string>::iterator	std_string_vector_iterator;
-	ft::vector<std::string>::iterator	ft_string_vector_iterator;
 
 	void setup()
 	{
@@ -231,10 +210,10 @@ TEST_GROUP(VectorIterators)
 
 TEST(VectorIterators, Begin)
 {
-	std_int_vector_iterator = std_int_vector.begin();
-	ft_int_vector_iterator = ft_int_vector.begin();
-	std_string_vector_iterator = std_string_vector.begin();
-	ft_string_vector_iterator = ft_string_vector.begin();
+	std::vector<int>::iterator			std_int_vector_iterator = std_int_vector.begin();
+	ft::vector<int>::iterator			ft_int_vector_iterator = ft_int_vector.begin();
+	std::vector<std::string>::iterator	std_string_vector_iterator = std_string_vector.begin();
+	ft::vector<std::string>::iterator	ft_string_vector_iterator = ft_string_vector.begin();
 
 	CHECK_EQUAL(*std_int_vector_iterator, *ft_int_vector_iterator);
 	CHECK_EQUAL(*std_string_vector_iterator, *ft_string_vector_iterator);
@@ -253,6 +232,13 @@ TEST(VectorIterators, Begin)
 	CHECK_EQUAL(*std_string_vector_iterator, *std_string_vector_iterator);
 }
 
+TEST(VectorIterators, Reverse)
+{
+	std::vector<int>::reverse_iterator			std_int_vector_riterator = std_int_vector.rbegin();
+	ft::vector<int>::reverse_iterator			ft_int_vector_riterator = ft_int_vector.rbegin();
+	std::vector<std::string>::reverse_iterator	std_string_vector_riterator = std_string_vector.rbegin();
+	ft::vector<std::string>::reverse_iterator	ft_string_vector_riterator = ft_string_vector.rbegin();
+}
 
 /* for insertion tests */
 /* 	compareContent(std_int_vector, ft_int_vector); */
