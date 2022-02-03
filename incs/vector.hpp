@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:40:54 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/02 17:29:00 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/03 09:46:25 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,13 @@ public:
 	vector( InputIt first, InputIt last, const Allocator& alloc = Allocator() ):
 		_data(NULL), _size(0), _capacity(0), _allocator(alloc)
 	{
-		assignDispatch(first, last);//, ft::is_integral<InputIt>::value);
+		assignDispatch(first, last);
+	}
+	vector( const vector& other ):
+		_data(NULL), _size(0), _capacity(0), _allocator(other._allocator)
+	{
+		this->_allocator = other._allocator;
+		this->assign(other.begin(), other.end());
 	}
 	~vector( void )
 	{
@@ -114,6 +120,11 @@ public:
 	{
 		this->clear();
 		this->resize(new_size, value);
+	}
+	template< typename InputIt >
+	void	assign( InputIt first, InputIt last )
+	{
+		assignDispatch(first, last);
 	}
 	void	resize( size_type new_size, const value_type& value )
 	{
@@ -175,7 +186,8 @@ private:
 	void	assignDispatch( InputIt first, InputIt last,
 			char(*)[ft::is_integral<InputIt>::value == true] = 0 )
 	{
-		resize(first, last);
+		this->clear();
+		this->resize(first, last);
 	}
 	template<typename InputIt>
 	void	assignDispatch( InputIt first, InputIt last,

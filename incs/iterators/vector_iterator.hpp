@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 11:30:59 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/02 13:00:55 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/03 09:54:08 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,22 @@ public:
 	}
 
 	pointer			getPointer( void ) const { return this->_pointer; }
+
+	reference			operator*() const { return *this->_pointer; }
+	pointer				operator->() const { return this->_pointer; }
+
+	vector_iterator&	operator++() { this->_pointer++; return *this; }  
+	vector_iterator&	operator--() { this->_pointer--; return *this; }  
+	vector_iterator		operator++(int) {
+		vector_iterator tmp(*this);
+		++(*this);
+		return tmp;
+	}
+	vector_iterator		operator--(int) {
+		vector_iterator tmp(*this);
+		--(*this);
+		return tmp;
+	}
 
 	friend bool	operator==( const vector_iterator& lhs,
 			const vector_iterator& rhs )

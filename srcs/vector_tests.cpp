@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:47:15 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/02 17:28:37 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/03 10:08:00 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ TEST(VectorMemberFunctions, EmptyConstructor)
 			== typeid(ft::vector<int>::allocator_type) );
 }
 
-TEST(VectorMemberFunctions, ValueConstructor1)
+TEST(VectorMemberFunctions, ValueConstructorSizeOnly)
 {
 	std::vector<int>			std_int_vector(21);
 	ft::vector<int>				ft_int_vector(21);
@@ -51,7 +51,7 @@ TEST(VectorMemberFunctions, ValueConstructor1)
 	CHECK_EQUAL(std_string_vector.front(), ft_string_vector.front());
 }
 
-TEST(VectorMemberFunctions, ValueConstructor2)
+TEST(VectorMemberFunctions, ValueConstructorSizeWithValue)
 {
 	std::vector<int>			std_int_vector(21, 4);
 	ft::vector<int>				ft_int_vector(21, 4);
@@ -66,7 +66,7 @@ TEST(VectorMemberFunctions, ValueConstructor2)
 	CHECK_EQUAL(std_string_vector.back(), ft_string_vector.back());
 }
 
-TEST(VectorMemberFunctions, ValueConstructor3)
+TEST(VectorMemberFunctions, ValueConstructorIteratorRange)
 {
 	std::list<int>				int_list(21, 42);
 	std::list<std::string>		string_list(21, "ft");
@@ -89,4 +89,36 @@ TEST(VectorMemberFunctions, ValueConstructorTricky)
 	ft::vector<int>				ft_int_vector(0, 4);
 
 	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
+}
+
+TEST(VectorMemberFunctions, CopyConstructor)
+{
+	std::vector<int>			std_int_vector(21, 4);
+	ft::vector<int>				ft_int_vector(21, 4);
+	std::vector<std::string>	std_string_vector(21, "ft");
+	ft::vector<std::string>		ft_string_vector(21, "ft");
+
+	std::vector<int>			std_int_copy_vector(std_int_vector);
+	ft::vector<int>				ft_int_copy_vector(ft_int_vector);
+	std::vector<std::string>	std_string_copy_vector(std_string_vector);
+	ft::vector<std::string>		ft_string_copy_vector(ft_string_vector);
+
+	CHECK_EQUAL(std_int_copy_vector.size(), ft_int_copy_vector.size());
+	CHECK_EQUAL(std_string_copy_vector.size(), ft_string_copy_vector.size());
+	CHECK_EQUAL(std_int_copy_vector.front(), ft_int_copy_vector.front());
+	CHECK_EQUAL(std_string_copy_vector.front(), ft_string_copy_vector.front());
+	CHECK_EQUAL(std_int_copy_vector.back(), ft_int_copy_vector.back());
+	CHECK_EQUAL(std_string_copy_vector.back(), ft_string_copy_vector.back());
+
+	std_int_vector.pop_back();
+	ft_int_vector.pop_back();
+	std_string_vector.pop_back();
+	ft_string_vector.pop_back();
+
+	CHECK_EQUAL(std_int_copy_vector.size(), ft_int_copy_vector.size());
+	CHECK_EQUAL(std_string_copy_vector.size(), ft_string_copy_vector.size());
+	CHECK_EQUAL(std_int_copy_vector.front(), ft_int_copy_vector.front());
+	CHECK_EQUAL(std_string_copy_vector.front(), ft_string_copy_vector.front());
+	CHECK_EQUAL(std_int_copy_vector.back(), ft_int_copy_vector.back());
+	CHECK_EQUAL(std_string_copy_vector.back(), ft_string_copy_vector.back());
 }
