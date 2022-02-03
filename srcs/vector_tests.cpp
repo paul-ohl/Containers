@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:47:15 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/02 14:28:28 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/02 17:28:37 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ TEST(VectorMemberFunctions, EmptyConstructor)
 
 TEST(VectorMemberFunctions, ValueConstructor1)
 {
-	std::vector<int>			std_int_vector(12);
-	ft::vector<int>				ft_int_vector(12);
-	std::vector<std::string>	std_string_vector(12);
-	ft::vector<std::string>		ft_string_vector(12);
+	std::vector<int>			std_int_vector(21);
+	ft::vector<int>				ft_int_vector(21);
+	std::vector<std::string>	std_string_vector(21);
+	ft::vector<std::string>		ft_string_vector(21);
 
 	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
 	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());
@@ -53,10 +53,27 @@ TEST(VectorMemberFunctions, ValueConstructor1)
 
 TEST(VectorMemberFunctions, ValueConstructor2)
 {
-	std::vector<int>			std_int_vector(12, 4);
-	ft::vector<int>				ft_int_vector(12, 4);
-	std::vector<std::string>	std_string_vector(12, "Bonjour");
-	ft::vector<std::string>		ft_string_vector(12, "Bonjour");
+	std::vector<int>			std_int_vector(21, 4);
+	ft::vector<int>				ft_int_vector(21, 4);
+	std::vector<std::string>	std_string_vector(21, "ft");
+	ft::vector<std::string>		ft_string_vector(21, "ft");
+
+	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
+	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());
+	CHECK_EQUAL(std_int_vector.front(), ft_int_vector.front());
+	CHECK_EQUAL(std_string_vector.front(), ft_string_vector.front());
+	CHECK_EQUAL(std_int_vector.back(), ft_int_vector.back());
+	CHECK_EQUAL(std_string_vector.back(), ft_string_vector.back());
+}
+
+TEST(VectorMemberFunctions, ValueConstructor3)
+{
+	std::list<int>				int_list(21, 42);
+	std::list<std::string>		string_list(21, "ft");
+	std::vector<int>			std_int_vector(int_list.begin(), int_list.end());
+	ft::vector<int>				ft_int_vector(int_list.begin(), int_list.end());
+	std::vector<std::string>	std_string_vector(string_list.begin(), string_list.end());
+	ft::vector<std::string>		ft_string_vector(string_list.begin(), string_list.end());
 
 	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
 	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());

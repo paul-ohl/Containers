@@ -6,16 +6,18 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:40:54 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/02 14:19:10 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/02 17:29:00 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
-/* # include <iostream> */
+# include <iostream>
 
 # include "iterators/vector_iterator.hpp"
+# include "utils/distanceBetweenIterators.hpp"
+# include "utils/is_integral.hpp"
 # include <cstring>
 
 namespace ft
@@ -50,6 +52,12 @@ public:
 		_data(NULL), _size(0), _capacity(0), _allocator(alloc)
 	{
 		resize(count, value);
+	}
+	template< typename InputIt >
+	vector( InputIt first, InputIt last, const Allocator& alloc = Allocator() ):
+		_data(NULL), _size(0), _capacity(0), _allocator(alloc)
+	{
+		assignDispatch(first, last);//, ft::is_integral<InputIt>::value);
 	}
 	~vector( void )
 	{
@@ -162,6 +170,25 @@ private:
 	{
 		for (size_type i = 0; i < count; i++)
 			_allocator.construct(&this->_data[startIndex + i], value);
+	}
+	template<typename InputIt>
+	void	assignDispatch( InputIt first, InputIt last,
+			char(*)[ft::is_integral<InputIt>::value == true] = 0 )
+	{
+		resize(first, last);
+	}
+	template<typename InputIt>
+	void	assignDispatch( InputIt first, InputIt last,
+			char(*)[ft::is_integral<InputIt>::value == false] = 0 )
+	{
+		const size_type newSize = ft::distanceBetweenIterators(first, last);
+
+		this->clear();
+		if (newSize > capacity())
+			this->reserve(newSize);
+		for (size_type i = 0; first != last; i++, first++)
+			_allocator.construct(&this->_data[i], *first);
+		this->_size = newSize;
 	}
 
 private:
