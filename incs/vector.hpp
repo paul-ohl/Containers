@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:40:54 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/03 09:46:25 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/03 10:17:58 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,13 +62,19 @@ public:
 	vector( const vector& other ):
 		_data(NULL), _size(0), _capacity(0), _allocator(other._allocator)
 	{
-		this->_allocator = other._allocator;
-		this->assign(other.begin(), other.end());
+		*this = other;
 	}
 	~vector( void )
 	{
 		this->clear();
 		_allocator.deallocate(this->_data, this->_capacity);
+	}
+
+	vector&		operator=( const vector& other )
+	{
+		this->_allocator = other._allocator;
+		this->assign(other.begin(), other.end());
+		return *this;
 	}
 
 	size_type				size( void ) const { return this->_size; }
