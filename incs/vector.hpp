@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:40:54 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/03 10:17:58 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/03 13:34:06 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,14 +103,22 @@ public:
 	reference		back( void ) { return this->_data[this->_size - 1]; }
 	const_reference	back( void ) const { return this->_data[this->_size - 1]; }
 
+	void	insert( iterator position, const value_type& value )
+	{
+		this->insert(position, 1, value);
+	}
 	void	insert( iterator position, size_type count,
 			const value_type& value )
 	{
 		size_type	startIndex = position - this->begin();
 
-		this->createHole(position, count);
+		this->createHole(startIndex, count);
 		this->fillRange(startIndex, count, value);
 		this->_size += count;
+	}
+	void	push_back( const T& value )
+	{
+		this->insert(this->end(), 1, value);
 	}
 	void	pop_back( void )
 	{
@@ -153,7 +161,8 @@ public:
 		{
 			allocated_size = closest_power_of_two(size);
 			new_data = _allocator.allocate(allocated_size);
-			memmove(new_data, this->_data, this->_size);
+			if (_size)
+				copyObjects(new_data, this->_data, this->_size);
 			if (_capacity)
 				_allocator.deallocate(_data, _capacity);
 			this->_data = new_data;
@@ -163,12 +172,16 @@ public:
 
 private:
 
-	void	createHole( iterator position, size_type size )
+	void	createHole( size_type startIndex,
+			size_type size )
 	{
 		if (this->_size + size > this->_capacity)
 			this->reserve(this->_size + size);
-		if (position.getPointer() && position != this->end())
-			memmove(position.getPointer() + size, position.getPointer(), size);
+		if (this->_data && this->_size > startIndex)
+		{
+			copyObjects(this->_data + startIndex + size,
+					this->_data + startIndex, this->_size - startIndex);
+		}
 	}
 	size_type	closest_power_of_two( size_type num ) const
 	{
@@ -208,10 +221,37 @@ private:
 			_allocator.construct(&this->_data[i], *first);
 		this->_size = newSize;
 	}
+	value_type	*copyObjects( value_type *dst, value_type *src,
+			size_type size)
+	{
+		/* bool		mustGoBackwards = dst > src; */
+		/* size_type	offset = mustGoBackwards ? size - 1 : 0; */
+
+		if (dst == src)
+			return dst;
+		if (dst < src)
+		{
+			for (size_type i = 0; i < size; i++)
+			{
+				_allocator.construct(dst + i, src[i]);
+				_allocator.destroy(&(src[i]));
+			}
+		}
+		else
+		{
+			for (size_type i = size; i > 0;)
+			{
+				i--;
+				_allocator.construct(dst + i, src[i]);
+				_allocator.destroy(src + i);
+			}
+		}
+		return dst;
+	}
 
 private:
 
-	T				*_data;
+	value_type		*_data;
 	size_type		_size;
 	size_type		_capacity;
 	allocator_type	_allocator;
