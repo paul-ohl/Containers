@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:47:15 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/03 10:08:00 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/03 10:12:19 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,14 +83,6 @@ TEST(VectorMemberFunctions, ValueConstructorIteratorRange)
 	CHECK_EQUAL(std_string_vector.back(), ft_string_vector.back());
 }
 
-TEST(VectorMemberFunctions, ValueConstructorTricky)
-{
-	std::vector<int>			std_int_vector(0, 4);
-	ft::vector<int>				ft_int_vector(0, 4);
-
-	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
-}
-
 TEST(VectorMemberFunctions, CopyConstructor)
 {
 	std::vector<int>			std_int_vector(21, 4);
@@ -120,5 +112,20 @@ TEST(VectorMemberFunctions, CopyConstructor)
 	CHECK_EQUAL(std_int_copy_vector.front(), ft_int_copy_vector.front());
 	CHECK_EQUAL(std_string_copy_vector.front(), ft_string_copy_vector.front());
 	CHECK_EQUAL(std_int_copy_vector.back(), ft_int_copy_vector.back());
+	CHECK_EQUAL(std_string_copy_vector.back(), ft_string_copy_vector.back());
+}
+
+TEST(VectorMemberFunctions, ValueConstructorTricky)
+{
+	std::vector<int>			std_int_vector(0, 4);
+	ft::vector<int>				ft_int_vector(0, 4);
+	std::vector<std::string>	std_string_vector(21, "42");
+	ft::vector<std::string>		ft_string_vector(21, "42");
+	std::vector<std::string>	std_string_copy_vector(std_string_vector.begin(), std_string_vector.end());
+	ft::vector<std::string>		ft_string_copy_vector(ft_string_vector.begin(), ft_string_vector.end());
+
+	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
+	CHECK_EQUAL(std_string_copy_vector.size(), ft_string_copy_vector.size());
+	CHECK_EQUAL(std_string_copy_vector.front(), ft_string_copy_vector.front());
 	CHECK_EQUAL(std_string_copy_vector.back(), ft_string_copy_vector.back());
 }
