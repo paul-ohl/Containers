@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:40:54 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/03 13:34:06 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/05 16:03:52 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <iostream>
 
 # include "iterators/vector_iterator.hpp"
+# include "iterators/reverse_iterator.hpp"
 # include "utils/distanceBetweenIterators.hpp"
 # include "utils/is_integral.hpp"
 # include <cstring>
@@ -29,16 +30,18 @@ class vector
 
 public:
 
-	typedef T										value_type;
-	typedef Allocator								allocator_type;
-	typedef std::size_t								size_type;
-	typedef std::ptrdiff_t							difference_type;
-	typedef typename Allocator::reference			reference;
-	typedef typename Allocator::const_reference		const_reference;
-	typedef typename Allocator::pointer				pointer;
-	typedef typename Allocator::const_pointer		const_pointer;
-	typedef vector_iterator<T>						iterator;
-	typedef vector_iterator<T, true>				const_iterator;
+	typedef T												value_type;
+	typedef Allocator										allocator_type;
+	typedef std::size_t										size_type;
+	typedef std::ptrdiff_t									difference_type;
+	typedef typename Allocator::reference					reference;
+	typedef typename Allocator::const_reference				const_reference;
+	typedef typename Allocator::pointer						pointer;
+	typedef typename Allocator::const_pointer				const_pointer;
+	typedef vector_iterator<T>								iterator;
+	typedef vector_iterator<T, true>						const_iterator;
+	typedef ft::reverse_iterator<vector_iterator<T> >		reverse_iterator;
+	typedef ft::reverse_iterator<vector_iterator<T, true> >	const_reverse_iterator;
 
 public:
 
@@ -96,6 +99,22 @@ public:
 	const_iterator	end( void ) const
 	{
 		return const_iterator(&this->_data[this->_size]);
+	}
+	reverse_iterator		rbegin( void )
+	{
+		return reverse_iterator(this->end());
+	}
+	const_reverse_iterator	rbegin( void ) const
+	{
+		return const_reverse_iterator(this->end());
+	}
+	reverse_iterator		rend( void )
+	{
+		return reverse_iterator(this->begin());
+	}
+	const_reverse_iterator	rend( void ) const
+	{
+		return const_reverse_iterator(this->begin());
 	}
 
 	reference		front( void ) { return this->_data[0]; }

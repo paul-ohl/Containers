@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:47:15 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/03 17:35:10 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/05 17:39:36 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,10 @@ TEST_GROUP(VectorIterators)
 	std::vector<std::string>	std_string_vector;
 	ft::vector<std::string>		ft_string_vector;
 
+	std::vector<int>::iterator			std_int_vector_it, std_int_vector_ite;
+	ft::vector<int>::iterator			ft_int_vector_it, ft_int_vector_ite;
+	std::vector<std::string>::iterator	std_string_vector_it, std_string_vector_ite;
+	ft::vector<std::string>::iterator	ft_string_vector_it, ft_string_vector_ite;
 
 	void setup()
 	{
@@ -205,39 +209,236 @@ TEST_GROUP(VectorIterators)
 		string_list.push_back("That's cool! Me too");
 		std_string_vector = std::vector<std::string>(string_list.begin(), string_list.end());
 		ft_string_vector = ft::vector<std::string>(string_list.begin(), string_list.end());
+
+		std_int_vector_it = std_int_vector.begin();
+		ft_int_vector_it = ft_int_vector.begin();
+		std_string_vector_it = std_string_vector.begin();
+		ft_string_vector_it = ft_string_vector.begin();
+		std_int_vector_ite = std_int_vector.end();
+		ft_int_vector_ite = ft_int_vector.end();
+		std_string_vector_ite = std_string_vector.end();
+		ft_string_vector_ite = ft_string_vector.end();
 	}
 };
 
 TEST(VectorIterators, Begin)
 {
-	std::vector<int>::iterator			std_int_vector_iterator = std_int_vector.begin();
-	ft::vector<int>::iterator			ft_int_vector_iterator = ft_int_vector.begin();
-	std::vector<std::string>::iterator	std_string_vector_iterator = std_string_vector.begin();
-	ft::vector<std::string>::iterator	ft_string_vector_iterator = ft_string_vector.begin();
-
-	CHECK_EQUAL(*std_int_vector_iterator, *ft_int_vector_iterator);
-	CHECK_EQUAL(*std_string_vector_iterator, *ft_string_vector_iterator);
+	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
+	CHECK_EQUAL(*std_string_vector_it, *ft_string_vector_it);
 
 	std_int_vector.insert(std_int_vector.begin(), 63);
 	ft_int_vector.insert(ft_int_vector.begin(), 63);
 	std_string_vector.insert(std_string_vector.begin(), "asdf");
 	ft_string_vector.insert(ft_string_vector.begin(), "asdf");
 
-	std_int_vector_iterator = std_int_vector.begin();
-	ft_int_vector_iterator = ft_int_vector.begin();
-	std_string_vector_iterator = std_string_vector.begin();
-	ft_string_vector_iterator = ft_string_vector.begin();
+	std_int_vector_it = std_int_vector.begin();
+	ft_int_vector_it = ft_int_vector.begin();
+	std_string_vector_it = std_string_vector.begin();
+	ft_string_vector_it = ft_string_vector.begin();
 
-	CHECK_EQUAL(*std_int_vector_iterator, *ft_int_vector_iterator);
-	CHECK_EQUAL(*std_string_vector_iterator, *std_string_vector_iterator);
+	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
+	CHECK_EQUAL(*std_string_vector_it, *std_string_vector_it);
 }
 
-TEST(VectorIterators, Reverse)
+TEST(VectorIterators, IteratorArithmetics)
 {
-	std::vector<int>::reverse_iterator			std_int_vector_riterator = std_int_vector.rbegin();
-	ft::vector<int>::reverse_iterator			ft_int_vector_riterator = ft_int_vector.rbegin();
-	std::vector<std::string>::reverse_iterator	std_string_vector_riterator = std_string_vector.rbegin();
-	ft::vector<std::string>::reverse_iterator	ft_string_vector_riterator = ft_string_vector.rbegin();
+	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
+	CHECK_EQUAL(*std_string_vector_it, *ft_string_vector_it);
+
+	std_int_vector_it++;
+	std_string_vector_it++;
+	ft_int_vector_it++;
+	ft_string_vector_it++;
+
+	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
+	CHECK_EQUAL(*std_string_vector_it, *ft_string_vector_it);
+
+	std_int_vector_it--;
+	std_string_vector_it--;
+	ft_int_vector_it--;
+	ft_string_vector_it--;
+
+	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
+	CHECK_EQUAL(*std_string_vector_it, *ft_string_vector_it);
+
+	std_int_vector_it += 4;
+	std_string_vector_it += 4;
+	ft_int_vector_it += 4;
+	ft_string_vector_it += 4;
+
+	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
+	CHECK_EQUAL(*std_string_vector_it, *ft_string_vector_it);
+
+	std_int_vector_it -= 2;
+	std_string_vector_it -= 2;
+	ft_int_vector_it -= 2;
+	ft_string_vector_it -= 2;
+
+	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
+	CHECK_EQUAL(*std_string_vector_it, *ft_string_vector_it);
+
+	CHECK_EQUAL(*(++std_int_vector_it), *(++ft_int_vector_it));
+	CHECK_EQUAL(*(++std_string_vector_it), *(++ft_string_vector_it));
+
+	CHECK_EQUAL(*(--std_int_vector_it), *(--ft_int_vector_it));
+	CHECK_EQUAL(*(--std_string_vector_it), *(--ft_string_vector_it));
+
+	CHECK_EQUAL(*(std_int_vector_it++), *(ft_int_vector_it++));
+	CHECK_EQUAL(*(std_string_vector_it++), *(ft_string_vector_it++));
+
+	CHECK_EQUAL(*(std_int_vector_it--), *(ft_int_vector_it--));
+	CHECK_EQUAL(*(std_string_vector_it--), *(ft_string_vector_it--));
+
+	CHECK_EQUAL(*(3 + std_int_vector_it), *(3 + ft_int_vector_it));
+	CHECK_EQUAL(*(3 + std_string_vector_it), *(3 + ft_string_vector_it));
+
+	CHECK_EQUAL(*(std_int_vector_it + 3), *(ft_int_vector_it + 3));
+	CHECK_EQUAL(*(std_string_vector_it + 3), *(ft_string_vector_it + 3));
+
+	CHECK_EQUAL(*(std_int_vector_it - 1), *(ft_int_vector_it - 1));
+	CHECK_EQUAL(*(std_string_vector_it - 1), *(ft_string_vector_it - 1));
+
+	CHECK_EQUAL(std_int_vector_it[2], ft_int_vector_it[2]);
+	CHECK_EQUAL(std_string_vector_it[2], ft_string_vector_it[2]);
+}
+
+TEST(VectorIterators, EqualOperator)
+{
+	std_int_vector_it = std_int_vector_ite - 1;
+	ft_int_vector_it = ft_int_vector_ite - 1;
+	std_string_vector_it = std_string_vector_ite - 1;
+	ft_string_vector_it = ft_string_vector_ite - 1;
+
+}
+
+TEST_GROUP(VectorReverseIterators)
+{
+	std::list<std::string>		string_list;
+	std::vector<int>			std_int_vector;
+	ft::vector<int>				ft_int_vector;
+	std::vector<std::string>	std_string_vector;
+	ft::vector<std::string>		ft_string_vector;
+
+	std::vector<int>::reverse_iterator			std_int_vector_rit, std_int_vector_rite;
+	ft::vector<int>::reverse_iterator			ft_int_vector_rit, ft_int_vector_rite;
+	std::vector<std::string>::reverse_iterator	std_string_vector_rit, std_string_vector_rite;
+	ft::vector<std::string>::reverse_iterator	ft_string_vector_rit, ft_string_vector_rite;
+
+	void setup()
+	{
+		for (int i = 0; i < 21; i++)
+		{
+			std_int_vector.push_back(i * 2);
+			ft_int_vector.push_back(i * 2);
+		}
+		string_list.push_back("Hi");
+		string_list.push_back("How are you?");
+		string_list.push_back("I'm fine and you?");
+		string_list.push_back("Really good thanks. And you?");
+		string_list.push_back("Amazing, I just finished ft_services!");
+		string_list.push_back("That's cool! Me too");
+
+		std_string_vector = std::vector<std::string>(string_list.begin(), string_list.end());
+		ft_string_vector = ft::vector<std::string>(string_list.begin(), string_list.end());
+		std_int_vector_rit = std_int_vector.rbegin();
+		ft_int_vector_rit = ft_int_vector.rbegin();
+		std_string_vector_rit = std_string_vector.rbegin();
+		ft_string_vector_rit = ft_string_vector.rbegin();
+
+		std_int_vector_rite = std_int_vector.rend();
+		ft_int_vector_rite = ft_int_vector.rend();
+		std_string_vector_rite = std_string_vector.rend();
+		ft_string_vector_rite = ft_string_vector.rend();
+	}
+};
+
+TEST(VectorReverseIterators, RBeginREnd)
+{
+	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
+	while (ft_int_vector_rit != ft_int_vector_rite)
+	{
+		CHECK_EQUAL(*std_int_vector_rit, *ft_int_vector_rit);
+		std_int_vector_rit++;
+		ft_int_vector_rit++;
+	}
+	CHECK(std_int_vector_rit == std_int_vector_rite);
+
+	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());
+	while (ft_string_vector_rit != ft_string_vector_rite)
+	{
+		CHECK_EQUAL(*std_string_vector_rit, *ft_string_vector_rit);
+		std_string_vector_rit++;
+		ft_string_vector_rit++;
+	}
+	CHECK(std_string_vector_rit == std_string_vector_rite);
+}
+
+TEST(VectorReverseIterators, IteratorArithmetics)
+{
+	CHECK_EQUAL(*std_int_vector_rit, *ft_int_vector_rit);
+	CHECK_EQUAL(*std_string_vector_rit, *ft_string_vector_rit);
+
+	std_int_vector_rit++;
+	std_string_vector_rit++;
+	ft_int_vector_rit++;
+	ft_string_vector_rit++;
+
+	CHECK_EQUAL(*std_int_vector_rit, *ft_int_vector_rit);
+	CHECK_EQUAL(*std_string_vector_rit, *ft_string_vector_rit);
+
+	std_int_vector_rit--;
+	std_string_vector_rit--;
+	ft_int_vector_rit--;
+	ft_string_vector_rit--;
+
+	CHECK_EQUAL(*std_int_vector_rit, *ft_int_vector_rit);
+	CHECK_EQUAL(*std_string_vector_rit, *ft_string_vector_rit);
+
+	std_int_vector_rit += 4;
+	std_string_vector_rit += 4;
+	ft_int_vector_rit += 4;
+	ft_string_vector_rit += 4;
+
+	CHECK_EQUAL(*std_int_vector_rit, *ft_int_vector_rit);
+	CHECK_EQUAL(*std_string_vector_rit, *ft_string_vector_rit);
+
+	std_int_vector_rit -= 2;
+	std_string_vector_rit -= 2;
+	ft_int_vector_rit -= 2;
+	ft_string_vector_rit -= 2;
+
+	CHECK_EQUAL(*std_int_vector_rit, *ft_int_vector_rit);
+	CHECK_EQUAL(*std_string_vector_rit, *ft_string_vector_rit);
+
+	CHECK_EQUAL(*(++std_int_vector_rit), *(++ft_int_vector_rit));
+	CHECK_EQUAL(*(++std_string_vector_rit), *(++ft_string_vector_rit));
+
+	CHECK_EQUAL(*(--std_int_vector_rit), *(--ft_int_vector_rit));
+	CHECK_EQUAL(*(--std_string_vector_rit), *(--ft_string_vector_rit));
+
+	CHECK_EQUAL(*(std_int_vector_rit++), *(ft_int_vector_rit++));
+	CHECK_EQUAL(*(std_string_vector_rit++), *(ft_string_vector_rit++));
+
+	CHECK_EQUAL(*(std_int_vector_rit--), *(ft_int_vector_rit--));
+	CHECK_EQUAL(*(std_string_vector_rit--), *(ft_string_vector_rit--));
+
+	CHECK_EQUAL(*(std_int_vector_rit + 3), *(ft_int_vector_rit + 3));
+	CHECK_EQUAL(*(std_string_vector_rit + 3), *(ft_string_vector_rit + 3));
+
+	CHECK_EQUAL(*(std_int_vector_rit - 1), *(ft_int_vector_rit - 1));
+	CHECK_EQUAL(*(std_string_vector_rit - 1), *(ft_string_vector_rit - 1));
+
+	CHECK_EQUAL(std_int_vector_rit[2], ft_int_vector_rit[2]);
+	CHECK_EQUAL(std_string_vector_rit[2], ft_string_vector_rit[2]);
+}
+
+TEST(VectorReverseIterators, EqualOperator)
+{
+	std_int_vector_rit = std_int_vector_rite - 1;
+	ft_int_vector_rit = ft_int_vector_rite - 1;
+	std_string_vector_rit = std_string_vector_rite - 1;
+	ft_string_vector_rit = ft_string_vector_rite - 1;
+
 }
 
 /* for insertion tests */

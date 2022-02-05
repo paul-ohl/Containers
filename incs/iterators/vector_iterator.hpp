@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 11:30:59 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/03 09:54:08 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/05 16:27:44 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,27 @@ public:
 		return tmp;
 	}
 
+	vector_iterator&	operator+=( int n ) { this->_pointer += n; return *this; }
+	vector_iterator&	operator-=( int n ) { this->_pointer -= n; return *this; }
+	vector_iterator		operator+( int n ) const { return vector_iterator(_pointer + n); }  
+	vector_iterator		operator-( int n ) const { return vector_iterator(_pointer - n); }  
+
+	friend difference_type		operator-( vector_iterator lhs, vector_iterator rhs )
+	{
+		return lhs._pointer - rhs._pointer;
+	}  
+
+	reference	operator[]( int n ) const { return *(*this + n); }
+
+	friend vector_iterator operator+( int lhs, const vector_iterator& rhs )
+	{
+		return vector_iterator(rhs._pointer + lhs);
+	}
+	friend vector_iterator operator-( int lhs, const vector_iterator& rhs )
+	{
+		return vector_iterator(rhs._pointer - lhs);
+	}
+
 	friend bool	operator==( const vector_iterator& lhs,
 			const vector_iterator& rhs )
 	{
@@ -76,12 +97,6 @@ public:
 	{
 		return lhs._pointer != rhs._pointer;
 	}
-
-	friend difference_type		operator-( vector_iterator lhs,
-			vector_iterator rhs )
-	{
-		return lhs._pointer - rhs._pointer;
-	}  
 
 private:
 
