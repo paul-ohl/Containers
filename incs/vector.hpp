@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:40:54 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/07 15:08:18 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/07 15:14:21 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,6 @@
 
 # include <iostream>
 
-/* # include "vector_iterator.hpp" */
-/* # include "reverse_iterator.hpp" */
-/* # include "distanceBetweenIterators.hpp" */
-/* # include "is_integral.hpp" */
 # include "iterators/vector_iterator.hpp"
 # include "iterators/reverse_iterator.hpp"
 # include "utils/distanceBetweenIterators.hpp"
