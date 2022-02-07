@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:40:54 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/07 13:29:25 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/07 15:08:18 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,10 @@
 
 # include <iostream>
 
+/* # include "vector_iterator.hpp" */
+/* # include "reverse_iterator.hpp" */
+/* # include "distanceBetweenIterators.hpp" */
+/* # include "is_integral.hpp" */
 # include "iterators/vector_iterator.hpp"
 # include "iterators/reverse_iterator.hpp"
 # include "utils/distanceBetweenIterators.hpp"
@@ -121,9 +125,16 @@ public:
 	{
 		return this->_data[index];
 	}
-
 	reference	at( const size_type index )
 	{
+		if (index >= this->_size)
+			throw std::out_of_range("index given is out of range.");
+		return this->_data[index];
+	}
+	const reference	at( const size_type index ) const
+	{
+		if (index >= this->_size)
+			throw std::out_of_range("index given is out of range.");
 		return this->_data[index];
 	}
 
@@ -241,10 +252,74 @@ public:
 	}
 	void	swap( vector& other )
 	{
-		vector	tmp(other);
+		value_type		*tmp_data = this->_data;
+		size_type		tmp_size = this->_size;
+		size_type		tmp_capacity = this->_capacity;
+		allocator_type	tmp_allocator = this->_allocator;
 
-		other = *this;
-		*this = tmp;
+		this->_data = other._data;
+		this->_size = other._size;
+		this->_capacity = other._capacity;
+		this->_allocator = other._allocator;
+		other._data			= tmp_data;
+		other._size			= tmp_size;
+		other._capacity		= tmp_capacity;
+		other._allocator	= tmp_allocator;
+	}
+
+	friend bool	operator==(const vector &lhs, const vector &rhs)
+	{
+		const_iterator	lhs_it = lhs.begin();
+		const_iterator	lhs_ite = lhs.end();
+		const_iterator	rhs_it = rhs.begin();
+		const_iterator	rhs_ite = rhs.end();
+
+		while (lhs_it != lhs_ite && rhs_it != rhs_ite && *lhs_it == *rhs_it)
+		{
+			lhs_it++;
+			rhs_it++;
+		}
+		if (lhs_it == lhs_ite && rhs_it == rhs_ite)
+			return true;
+		return false;
+	}
+	friend bool	operator!=(const vector &lhs, const vector &rhs)
+	{
+		return !(lhs == rhs);
+	}
+	friend bool	operator<(const vector &lhs, const vector &rhs)
+	{
+		const_iterator	lhs_it = lhs.begin();
+		const_iterator	lhs_ite = lhs.end();
+		const_iterator	rhs_it = rhs.begin();
+		const_iterator	rhs_ite = rhs.end();
+
+		while (lhs_it != lhs_ite && rhs_it != rhs_ite && *lhs_it == *rhs_it)
+		{
+			lhs_it++;
+			rhs_it++;
+		}
+		if (lhs_it == lhs_ite)
+		{
+			if (rhs_it != rhs_ite)
+				return true;
+			return false;
+		}
+		if (rhs_it == rhs_ite)
+			return false;
+		return *lhs_it < *rhs_it;
+	}
+	friend bool	operator>(const vector &lhs, const vector &rhs)
+	{
+		return rhs < lhs;
+	}
+	friend bool	operator<=(const vector &lhs, const vector &rhs)
+	{
+		return !(lhs > rhs);
+	}
+	friend bool	operator>=(const vector &lhs, const vector &rhs)
+	{
+		return !(lhs < rhs);
 	}
 
 private:

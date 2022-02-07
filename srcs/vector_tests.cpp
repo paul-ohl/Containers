@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:47:15 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/07 13:33:59 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/07 15:12:25 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -675,6 +675,18 @@ TEST(VectorAccess, At)
 	ft_string_vector.at(0) = "1234";
 	CHECK_EQUAL(std_int_vector.at(0), ft_int_vector.at(0));
 	CHECK_EQUAL(std_string_vector.at(0), ft_string_vector.at(0));
+	try
+	{
+		ft_int_vector.at(9872) = 12;
+	}
+	catch( std::out_of_range &e )
+	{
+		CHECK(true);
+	}
+	catch( std::exception &e )
+	{
+		FAIL("Wrong exception handling for out_of_range at()");
+	}
 }
 
 TEST(VectorAccess, Front)
@@ -870,6 +882,11 @@ TEST(VectorModifiers, Swap)
 	std::vector<std::string>	other_std_string_v;
 	ft::vector<std::string>		other_ft_string_v;
 
+	std_int_it					std_int_iterator;
+	ft_int_it					ft_int_iterator;
+	std_string_it				std_string_iterator;
+	ft_string_it				ft_string_iterator;
+
 	for (int i = 0; i < 5; i++)
 	{
 		other_std_int_v.push_back(i * 9);
@@ -892,6 +909,8 @@ TEST(VectorModifiers, Swap)
 	compareContent(std_string_vector, ft_string_vector);
 	compareContent(other_std_int_v, other_ft_int_v);
 	compareContent(other_std_string_v, other_ft_string_v);
+	ft_int_iterator = ft_int_vector.begin();
+	ft_string_iterator = ft_string_vector.begin();
 
 	std_int_vector.swap(other_std_int_v);
 	ft_int_vector.swap(other_ft_int_v);
@@ -902,4 +921,6 @@ TEST(VectorModifiers, Swap)
 	compareContent(std_string_vector, ft_string_vector);
 	compareContent(other_std_int_v, other_ft_int_v);
 	compareContent(other_std_string_v, other_ft_string_v);
+	POINTERS_EQUAL(&(*ft_int_iterator), &(*other_ft_int_v.begin()));
+	POINTERS_EQUAL(&(*ft_string_iterator), &(*other_ft_string_v.begin()));
 }

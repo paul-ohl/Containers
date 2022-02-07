@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 11:30:59 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/05 16:27:44 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/07 15:08:24 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <iterator>
 # include "utils/select_const_type.hpp"
+/* # include "select_const_type.hpp" */
 
 namespace ft
 {
@@ -96,6 +97,22 @@ public:
 			const vector_iterator& rhs )
 	{
 		return lhs._pointer != rhs._pointer;
+	}
+	friend bool	operator<( const vector_iterator& lhs, const vector_iterator& rhs )
+	{
+		return lhs._pointer < rhs._pointer;
+	}
+	friend bool	operator<=( const vector_iterator& lhs, const vector_iterator& rhs )
+	{
+		return lhs._pointer <= rhs._pointer;
+	}
+	friend bool	operator>( const vector_iterator& lhs, const vector_iterator& rhs )
+	{
+		return lhs._pointer > rhs._pointer;
+	}
+	friend bool	operator>=( const vector_iterator& lhs, const vector_iterator& rhs )
+	{
+		return lhs._pointer >= rhs._pointer;
 	}
 
 private:
