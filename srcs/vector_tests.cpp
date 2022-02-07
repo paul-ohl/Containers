@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:47:15 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/05 17:39:36 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/07 10:27:13 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@
 #include "vector.hpp"
 #include "CppUTest/TestHarness.h"
 #include "CppUTest/UtestMacros.h"
+
+typedef std::vector<int>::iterator			std_int_it;
+typedef ft::vector<int>::iterator			ft_int_it;
+typedef std::vector<std::string>::iterator	std_string_it;
+typedef ft::vector<std::string>::iterator	ft_string_it;
 
 template< typename StdVector, typename FtVector >
 void	compareContent( StdVector stdVector, FtVector ftVector, bool print = false )
@@ -189,10 +194,10 @@ TEST_GROUP(VectorIterators)
 	std::vector<std::string>	std_string_vector;
 	ft::vector<std::string>		ft_string_vector;
 
-	std::vector<int>::iterator			std_int_vector_it, std_int_vector_ite;
-	ft::vector<int>::iterator			ft_int_vector_it, ft_int_vector_ite;
-	std::vector<std::string>::iterator	std_string_vector_it, std_string_vector_ite;
-	ft::vector<std::string>::iterator	ft_string_vector_it, ft_string_vector_ite;
+	std_int_it		std_int_vector_it, std_int_vector_ite;
+	ft_int_it		ft_int_vector_it, ft_int_vector_ite;
+	std_string_it	std_string_vector_it, std_string_vector_ite;
+	ft_string_it	ft_string_vector_it, ft_string_vector_ite;
 
 	void setup()
 	{
@@ -238,6 +243,17 @@ TEST(VectorIterators, Begin)
 
 	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
 	CHECK_EQUAL(*std_string_vector_it, *std_string_vector_it);
+}
+
+TEST(VectorIterators, CopyConstructors)
+{
+	std_int_it	std_copy_it(std_int_vector_it);
+	ft_int_it	ft_copy_it(ft_int_vector_it);
+
+	CHECK_EQUAL(*std_copy_it, *ft_copy_it);
+	std_int_vector_it++;
+	ft_int_vector_it++;
+	CHECK_EQUAL(*std_copy_it, *ft_copy_it);
 }
 
 TEST(VectorIterators, IteratorArithmetics)
@@ -309,6 +325,31 @@ TEST(VectorIterators, EqualOperator)
 	std_string_vector_it = std_string_vector_ite - 1;
 	ft_string_vector_it = ft_string_vector_ite - 1;
 
+	CHECK_EQUAL(*std_int_vector_it, *ft_int_vector_it);
+	CHECK_EQUAL(*std_string_vector_it, *ft_string_vector_it);
+}
+
+TEST(VectorIterators, Const)
+{
+	std::vector<int>::const_iterator	std_const_it, std_const_ite;
+	ft::vector<int>::const_iterator		ft_const_it, ft_const_ite;
+	std::vector<int>::const_iterator	std_const_it_copy(std_int_vector_it);
+	ft::vector<int>::const_iterator		ft_const_it_copy(ft_int_vector_it);
+
+	std_const_it = std_int_vector.begin();
+	std_const_ite = std_int_vector.end();
+	ft_const_it = ft_int_vector.begin();
+	ft_const_ite = ft_int_vector.end();
+
+	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
+	while (ft_const_it != ft_const_ite)
+	{
+		CHECK_EQUAL(*std_const_it, *ft_const_it);
+		CHECK_EQUAL(*std_const_it_copy, *ft_const_it_copy);
+		CHECK_EQUAL((std_const_it == std_int_vector_ite), (ft_const_it == ft_int_vector_ite));
+		std_const_it++;
+		ft_const_it++;
+	}
 }
 
 TEST_GROUP(VectorReverseIterators)
@@ -441,7 +482,7 @@ TEST(VectorReverseIterators, EqualOperator)
 
 }
 
-/* for insertion tests */
+/* /1* for insertion tests *1/ */
 /* 	compareContent(std_int_vector, ft_int_vector); */
 /* 	std_int_vector.insert(std_int_vector.begin(), 4, 3); */
 /* 	ft_int_vector.insert(ft_int_vector.begin(), 4, 3); */
