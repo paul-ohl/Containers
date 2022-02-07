@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:40:54 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/05 16:03:52 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/07 13:29:25 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,14 +117,27 @@ public:
 		return const_reverse_iterator(this->begin());
 	}
 
+	reference	operator[]( const size_type index )
+	{
+		return this->_data[index];
+	}
+
+	reference	at( const size_type index )
+	{
+		return this->_data[index];
+	}
+
 	reference		front( void ) { return this->_data[0]; }
 	const_reference	front( void ) const { return this->_data[0]; }
 	reference		back( void ) { return this->_data[this->_size - 1]; }
 	const_reference	back( void ) const { return this->_data[this->_size - 1]; }
 
-	void	insert( iterator position, const value_type& value )
+	iterator	insert( iterator position, const value_type& value )
 	{
+		size_type	insertionIndex = position - this->begin();
+
 		this->insert(position, 1, value);
+		return (iterator(&this->_data[insertionIndex]));
 	}
 	void	insert( iterator position, size_type count,
 			const value_type& value )
@@ -134,6 +147,11 @@ public:
 		this->createHole(startIndex, count);
 		this->fillRange(startIndex, count, value);
 		this->_size += count;
+	}
+	template< typename InputIt >
+	void	insert( iterator position, InputIt first, InputIt last )
+	{
+		this->insertDispatch(position, first, last);
 	}
 	void	push_back( const T& value )
 	{
@@ -159,7 +177,40 @@ public:
 	{
 		assignDispatch(first, last);
 	}
-	void	resize( size_type new_size, const value_type& value )
+	iterator	erase( iterator position )
+	{
+		if (position + 1 == this->end())
+		{
+			this->pop_back();
+			return position;
+		}
+		this->_allocator.destroy(position.getPointer());
+		this->_size--;
+		this->copyObjects(position.getPointer(), position.getPointer() + 1,
+				this->end() - position);
+		return position;
+	}
+	iterator	erase( iterator first, iterator last )
+	{
+		value_type *dst = first.getPointer();
+		size_type	amountToMove = this->end() - last;
+
+		if (last == this->end())
+		{
+			while (first != this->end())
+				this->pop_back();
+			return this->end();
+		}
+		this->_size -= last - first;
+		while (first != last)
+		{
+			this->_allocator.destroy(first.getPointer());
+			first++;
+		}
+		this->copyObjects(dst, last.getPointer(), amountToMove);
+		return iterator(dst);
+	}
+	void	resize( size_type new_size, const value_type& value = value_type() )
 	{
 		if (this->_size < new_size)
 			insert(end(), new_size - size(), value);
@@ -187,6 +238,13 @@ public:
 			this->_data = new_data;
 			this->_capacity = allocated_size;
 		}
+	}
+	void	swap( vector& other )
+	{
+		vector	tmp(other);
+
+		other = *this;
+		*this = tmp;
 	}
 
 private:
@@ -221,6 +279,28 @@ private:
 			_allocator.construct(&this->_data[startIndex + i], value);
 	}
 	template<typename InputIt>
+	void	insertDispatch( iterator position, InputIt first, InputIt last,
+			char(*)[ft::is_integral<InputIt>::value == true] = 0 )
+	{
+		size_type	startIndex = position - this->begin();
+
+		this->createHole(startIndex, first);
+		this->fillRange(startIndex, first, last);
+		this->_size += first;
+	}
+	template<typename InputIt>
+	void	insertDispatch( iterator position, InputIt first, InputIt last,
+			char(*)[ft::is_integral<InputIt>::value == false] = 0 )
+	{
+		const size_type rangeSize = ft::distanceBetweenIterators(first, last);
+		const size_type startIndex = position - this->begin();
+
+		this->createHole(startIndex, rangeSize);
+		for (size_type i = startIndex; first != last; i++, first++)
+			_allocator.construct(&this->_data[i], *first);
+		this->_size += rangeSize;
+	}
+	template<typename InputIt>
 	void	assignDispatch( InputIt first, InputIt last,
 			char(*)[ft::is_integral<InputIt>::value == true] = 0 )
 	{
@@ -243,9 +323,6 @@ private:
 	value_type	*copyObjects( value_type *dst, value_type *src,
 			size_type size)
 	{
-		/* bool		mustGoBackwards = dst > src; */
-		/* size_type	offset = mustGoBackwards ? size - 1 : 0; */
-
 		if (dst == src)
 			return dst;
 		if (dst < src)

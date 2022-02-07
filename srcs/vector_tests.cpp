@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 09:47:15 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/07 10:27:13 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/07 13:33:59 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -473,6 +473,29 @@ TEST(VectorReverseIterators, IteratorArithmetics)
 	CHECK_EQUAL(std_string_vector_rit[2], ft_string_vector_rit[2]);
 }
 
+TEST(VectorReverseIterators, Const)
+{
+	std::vector<int>::const_reverse_iterator	std_const_rit, std_const_rite;
+	ft::vector<int>::const_reverse_iterator		ft_const_rit, ft_const_rite;
+	std::vector<int>::const_reverse_iterator	std_const_rit_copy(std_int_vector_rit);
+	ft::vector<int>::const_reverse_iterator		ft_const_rit_copy(ft_int_vector_rit);
+
+	std_const_rit = std_int_vector.rbegin();
+	std_const_rite = std_int_vector.rend();
+	ft_const_rit = ft_int_vector.rbegin();
+	ft_const_rite = ft_int_vector.rend();
+
+	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
+	while (ft_const_rit != ft_const_rite)
+	{
+		CHECK_EQUAL(*std_const_rit, *ft_const_rit);
+		CHECK_EQUAL(*std_const_rit_copy, *ft_const_rit_copy);
+		CHECK_EQUAL((std_const_rit == std_const_rite), (ft_const_rit == ft_const_rite));
+		std_const_rit++;
+		ft_const_rit++;
+	}
+}
+
 TEST(VectorReverseIterators, EqualOperator)
 {
 	std_int_vector_rit = std_int_vector_rite - 1;
@@ -482,20 +505,401 @@ TEST(VectorReverseIterators, EqualOperator)
 
 }
 
-/* /1* for insertion tests *1/ */
-/* 	compareContent(std_int_vector, ft_int_vector); */
-/* 	std_int_vector.insert(std_int_vector.begin(), 4, 3); */
-/* 	ft_int_vector.insert(ft_int_vector.begin(), 4, 3); */
-/* 	compareContent(std_int_vector, ft_int_vector); */
-/* 	std_int_vector.insert(std_int_vector.begin(), 4); */
-/* 	ft_int_vector.insert(ft_int_vector.begin(), 4); */
-/* 	compareContent(std_int_vector, ft_int_vector); */
-/* 	std_int_vector.insert(std_int_vector.begin(), 5); */
-/* 	ft_int_vector.insert(ft_int_vector.begin(), 5); */
-/* 	compareContent(std_int_vector, ft_int_vector); */
-/* 	ft_string_vector.insert(ft_string_vector.begin(), "HI"); */
-/* 	std_string_vector.insert(std_string_vector.begin(), "HI"); */
-/* 	compareContent(std_string_vector, ft_string_vector); */
-/* 	ft_string_vector.insert(ft_string_vector.begin(), "FUCK"); */
-/* 	std_string_vector.insert(std_string_vector.begin(), "FUCK"); */
-/* 	compareContent(std_string_vector, ft_string_vector); */
+TEST_GROUP(VectorCapacity)
+{
+	std::list<std::string>		string_list;
+	std::vector<int>			std_int_vector;
+	ft::vector<int>				ft_int_vector;
+	std::vector<std::string>	std_string_vector;
+	ft::vector<std::string>		ft_string_vector;
+
+	void setup()
+	{
+		for (int i = 0; i < 21; i++)
+		{
+			std_int_vector.push_back(i * 2);
+			ft_int_vector.push_back(i * 2);
+		}
+		string_list.push_back("Hi");
+		string_list.push_back("How are you?");
+		string_list.push_back("I'm fine and you?");
+		string_list.push_back("Really good thanks. And you?");
+		string_list.push_back("Amazing, I just finished ft_services!");
+		string_list.push_back("That's cool! Me too");
+
+		std_string_vector = std::vector<std::string>(string_list.begin(), string_list.end());
+		ft_string_vector = ft::vector<std::string>(string_list.begin(), string_list.end());
+	}
+};
+
+TEST(VectorCapacity, Size)
+{
+	CHECK_EQUAL(std_int_vector.size(), ft_int_vector.size());
+	CHECK_EQUAL(std_string_vector.size(), ft_string_vector.size());
+}
+
+TEST(VectorCapacity, MaxSize)
+{
+	CHECK_EQUAL(std_int_vector.max_size(), ft_int_vector.max_size());
+	CHECK_EQUAL(std_string_vector.max_size(), ft_string_vector.max_size());
+}
+
+TEST(VectorCapacity, Resize)
+{
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.resize(4);
+	ft_int_vector.resize(4);
+	std_string_vector.resize(4);
+	ft_string_vector.resize(4);
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.resize(4);
+	ft_int_vector.resize(4);
+	std_string_vector.resize(4);
+	ft_string_vector.resize(4);
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.resize(8, 1234);
+	ft_int_vector.resize(8, 1234);
+	std_string_vector.resize(8, "super cool");
+	ft_string_vector.resize(8, "super cool");
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.resize(4, 32);
+	ft_int_vector.resize(4, 32);
+	std_string_vector.resize(4, "43");
+	ft_string_vector.resize(4, "43");
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.resize(12);
+	ft_int_vector.resize(12);
+	std_string_vector.resize(12);
+	ft_string_vector.resize(12);
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+}
+
+TEST(VectorCapacity, Empty)
+{
+	CHECK_EQUAL(std_int_vector.empty(), ft_int_vector.empty());
+	CHECK_EQUAL(std_string_vector.empty(), ft_string_vector.empty());
+
+	std_int_vector.resize(0);
+	ft_int_vector.resize(0);
+	std_string_vector.resize(0);
+	ft_string_vector.resize(0);
+
+	CHECK_EQUAL(std_int_vector.empty(), ft_int_vector.empty());
+	CHECK_EQUAL(std_string_vector.empty(), ft_string_vector.empty());
+}
+
+TEST(VectorCapacity, Reserve)
+{
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.reserve(0);
+	ft_int_vector.reserve(0);
+	std_string_vector.reserve(0);
+	ft_string_vector.reserve(0);
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.reserve(1234);
+	ft_int_vector.reserve(1234);
+	std_string_vector.reserve(1234);
+	ft_string_vector.reserve(1234);
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.reserve(2);
+	ft_int_vector.reserve(2);
+	std_string_vector.reserve(2);
+	ft_string_vector.reserve(2);
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+}
+
+TEST(VectorCapacity, GetAllocator)
+{
+	CHECK_TRUE(typeid(std_int_vector.get_allocator())
+			== typeid(ft_int_vector.get_allocator()));
+	CHECK_TRUE(typeid(std_string_vector.get_allocator())
+			== typeid(ft_string_vector.get_allocator()));
+}
+
+TEST_GROUP(VectorAccess)
+{
+	std::list<std::string>		string_list;
+	std::vector<int>			std_int_vector;
+	ft::vector<int>				ft_int_vector;
+	std::vector<std::string>	std_string_vector;
+	ft::vector<std::string>		ft_string_vector;
+
+	void setup()
+	{
+		for (int i = 0; i < 21; i++)
+		{
+			std_int_vector.push_back(i * 2);
+			ft_int_vector.push_back(i * 2);
+		}
+		string_list.push_back("Hi");
+		string_list.push_back("How are you?");
+		string_list.push_back("I'm fine and you?");
+		string_list.push_back("Really good thanks. And you?");
+		string_list.push_back("Amazing, I just finished ft_services!");
+		string_list.push_back("That's cool! Me too");
+
+		std_string_vector = std::vector<std::string>(string_list.begin(), string_list.end());
+		ft_string_vector = ft::vector<std::string>(string_list.begin(), string_list.end());
+	}
+};
+
+TEST(VectorAccess, SquareBracket)
+{
+	CHECK_EQUAL(std_int_vector[0], ft_int_vector[0]);
+	CHECK_EQUAL(std_string_vector[0], ft_string_vector[0]);
+	std_int_vector[0] = 1234;
+	ft_int_vector[0] = 1234;
+	std_string_vector[0] = "1234";
+	ft_string_vector[0] = "1234";
+	CHECK_EQUAL(std_int_vector[0], ft_int_vector[0]);
+	CHECK_EQUAL(std_string_vector[0], ft_string_vector[0]);
+}
+
+TEST(VectorAccess, At)
+{
+	CHECK_EQUAL(std_int_vector.at(0), ft_int_vector.at(0));
+	CHECK_EQUAL(std_string_vector.at(0), ft_string_vector.at(0));
+	std_int_vector.at(0) = 1234;
+	ft_int_vector.at(0) = 1234;
+	std_string_vector.at(0) = "1234";
+	ft_string_vector.at(0) = "1234";
+	CHECK_EQUAL(std_int_vector.at(0), ft_int_vector.at(0));
+	CHECK_EQUAL(std_string_vector.at(0), ft_string_vector.at(0));
+}
+
+TEST(VectorAccess, Front)
+{
+	CHECK_EQUAL(std_int_vector.front(), ft_int_vector.front());
+	CHECK_EQUAL(std_string_vector.front(), ft_string_vector.front());
+	std_int_vector.front() = 1234;
+	ft_int_vector.front() = 1234;
+	std_string_vector.front() = "1234";
+	ft_string_vector.front() = "1234";
+	CHECK_EQUAL(std_int_vector.front(), ft_int_vector.front());
+	CHECK_EQUAL(std_string_vector.front(), ft_string_vector.front());
+}
+
+TEST(VectorAccess, Back)
+{
+	CHECK_EQUAL(std_int_vector.back(), ft_int_vector.back());
+	CHECK_EQUAL(std_string_vector.back(), ft_string_vector.back());
+	std_int_vector.back() = 1234;
+	ft_int_vector.back() = 1234;
+	std_string_vector.back() = "1234";
+	ft_string_vector.back() = "1234";
+	CHECK_EQUAL(std_int_vector.back(), ft_int_vector.back());
+	CHECK_EQUAL(std_string_vector.back(), ft_string_vector.back());
+}
+
+TEST_GROUP(VectorModifiers)
+{
+	std::list<std::string>		string_list;
+	std::vector<int>			std_int_vector;
+	ft::vector<int>				ft_int_vector;
+	std::vector<std::string>	std_string_vector;
+	ft::vector<std::string>		ft_string_vector;
+
+	void setup()
+	{
+		for (int i = 0; i < 21; i++)
+		{
+			std_int_vector.push_back(i * 2);
+			ft_int_vector.push_back(i * 2);
+		}
+		string_list.push_back("Hi");
+		string_list.push_back("How are you?");
+		string_list.push_back("I'm fine and you?");
+		string_list.push_back("Really good thanks. And you?");
+		string_list.push_back("Amazing, I just finished ft_services!");
+		string_list.push_back("That's cool! Me too");
+
+		std_string_vector = std::vector<std::string>(string_list.begin(), string_list.end());
+		ft_string_vector = ft::vector<std::string>(string_list.begin(), string_list.end());
+	}
+};
+
+TEST(VectorModifiers, Assign)
+{
+	std::list<int>	int_list;
+
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.assign(4, 42);
+	ft_int_vector.assign(4, 42);
+	std_string_vector.assign(4, "42");
+	ft_string_vector.assign(4, "42");
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	for (int i = 0; i < 12; i++)
+		int_list.push_back(i * i);
+	std_int_vector.assign(int_list.begin(), int_list.end());
+	ft_int_vector.assign(int_list.begin(), int_list.end());
+	std_string_vector.assign(string_list.begin(), string_list.end());
+	ft_string_vector.assign(string_list.begin(), string_list.end());
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+}
+
+TEST(VectorModifiers, PushBack)
+{
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.push_back(42);
+	ft_int_vector.push_back(42);
+	std_string_vector.push_back("42");
+	ft_string_vector.push_back("42");
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+}
+
+TEST(VectorModifiers, PopBack)
+{
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.pop_back();
+	ft_int_vector.pop_back();
+	std_string_vector.pop_back();
+	ft_string_vector.pop_back();
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+}
+
+TEST(VectorModifiers, Insert)
+{
+	std::list<int>	int_list;
+	std_int_it		std_int_iterator;
+	ft_int_it		ft_int_iterator;
+	std_string_it	std_string_iterator;
+	ft_string_it	ft_string_iterator;
+
+	for (int i = 0; i < 12; i++)
+		int_list.push_back(i * i);
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_iterator = std_int_vector.insert(std_int_vector.begin(), 4);
+	ft_int_iterator = ft_int_vector.insert(ft_int_vector.begin(), 4);
+	std_string_iterator = std_string_vector.insert(std_string_vector.begin(), "YUCK");
+	ft_string_iterator = ft_string_vector.insert(ft_string_vector.begin(), "YUCK");
+	CHECK_EQUAL(*std_int_iterator, *ft_int_iterator);
+	CHECK_EQUAL(*std_string_iterator, *ft_string_iterator);
+	CHECK_EQUAL(std_int_iterator - std_int_vector.begin(), ft_int_iterator - ft_int_vector.begin());
+	CHECK_EQUAL(std_string_iterator - std_string_vector.begin(), ft_string_iterator - ft_string_vector.begin());
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.insert(std_int_vector.begin() + 3, 4, 3);
+	ft_int_vector.insert(ft_int_vector.begin() + 3, 4, 3);
+	std_string_vector.insert(std_string_vector.begin() + 3, 2, "HI");
+	ft_string_vector.insert(ft_string_vector.begin() + 3, 2, "HI");
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.insert(std_int_vector.begin() + 2, int_list.begin(), int_list.end());
+	ft_int_vector.insert(ft_int_vector.begin() + 2, int_list.begin(), int_list.end());
+	std_string_vector.insert(std_string_vector.begin() + 2, string_list.begin(), string_list.end());
+	ft_string_vector.insert(ft_string_vector.begin() + 2, string_list.begin(), string_list.end());
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+}
+
+TEST(VectorModifiers, Erase)
+{
+	std_int_it		std_int_iterator;
+	ft_int_it		ft_int_iterator;
+	std_string_it	std_string_iterator;
+	ft_string_it	ft_string_iterator;
+
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_iterator = std_int_vector.erase(std_int_vector.begin() + 3);
+	ft_int_iterator = ft_int_vector.erase(ft_int_vector.begin() + 3);
+	std_string_iterator = std_string_vector.erase(std_string_vector.begin() + 3);
+	ft_string_iterator = ft_string_vector.erase(ft_string_vector.begin() + 3);
+	CHECK_EQUAL(*std_int_iterator, *ft_int_iterator);
+	CHECK_EQUAL(*std_string_iterator, *ft_string_iterator);
+	CHECK_EQUAL(std_int_iterator - std_int_vector.begin(), ft_int_iterator - ft_int_vector.begin());
+	CHECK_EQUAL(std_string_iterator - std_string_vector.begin(), ft_string_iterator - ft_string_vector.begin());
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.erase(std_int_vector.begin());
+	ft_int_vector.erase(ft_int_vector.begin());
+	std_string_vector.erase(std_string_vector.begin());
+	ft_string_vector.erase(ft_string_vector.begin());
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.erase(std_int_vector.end() - 1);
+	ft_int_vector.erase(ft_int_vector.end() - 1);
+	std_string_vector.erase(std_string_vector.end() - 1);
+	ft_string_vector.erase(ft_string_vector.end() - 1);
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_iterator = std_int_vector.erase(std_int_vector.begin() + 2, std_int_vector.begin() + 8);
+	ft_int_iterator = ft_int_vector.erase(ft_int_vector.begin() + 2, ft_int_vector.begin() + 8);
+	std_string_iterator = std_string_vector.erase(std_string_vector.begin() + 1, std_string_vector.begin() + 3);
+	ft_string_iterator = ft_string_vector.erase(ft_string_vector.begin() + 1, ft_string_vector.begin() + 3);
+	CHECK_EQUAL(std_int_iterator - std_int_vector.begin(), ft_int_iterator - ft_int_vector.begin());
+	CHECK_EQUAL(std_string_iterator - std_string_vector.begin(), ft_string_iterator - ft_string_vector.begin());
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+}
+
+TEST(VectorModifiers, Clear)
+{
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	std_int_vector.clear();
+	ft_int_vector.clear();
+	std_string_vector.clear();
+	ft_string_vector.clear();
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+}
+
+TEST(VectorModifiers, Swap)
+{
+	std::vector<int>			other_std_int_v;
+	ft::vector<int>				other_ft_int_v;
+	std::vector<std::string>	other_std_string_v;
+	ft::vector<std::string>		other_ft_string_v;
+
+	for (int i = 0; i < 5; i++)
+	{
+		other_std_int_v.push_back(i * 9);
+		other_ft_int_v.push_back(i * 9);
+	}
+	other_std_string_v.push_back("qwer");
+	other_std_string_v.push_back("asdf");
+	other_std_string_v.push_back(";lkj");
+	other_std_string_v.push_back("zxcv");
+	other_std_string_v.push_back("poiu");
+	other_std_string_v.push_back("vbnm");
+	other_ft_string_v.push_back("qwer");
+	other_ft_string_v.push_back("asdf");
+	other_ft_string_v.push_back(";lkj");
+	other_ft_string_v.push_back("zxcv");
+	other_ft_string_v.push_back("poiu");
+	other_ft_string_v.push_back("vbnm");
+
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	compareContent(other_std_int_v, other_ft_int_v);
+	compareContent(other_std_string_v, other_ft_string_v);
+
+	std_int_vector.swap(other_std_int_v);
+	ft_int_vector.swap(other_ft_int_v);
+	std_string_vector.swap(other_std_string_v);
+	ft_string_vector.swap(other_ft_string_v);
+
+	compareContent(std_int_vector, ft_int_vector);
+	compareContent(std_string_vector, ft_string_vector);
+	compareContent(other_std_int_v, other_ft_int_v);
+	compareContent(other_std_string_v, other_ft_string_v);
+}
