@@ -11,7 +11,8 @@ D		= deps/
 NAME	= ft_containers
 
 # list of your source files
-SRCS	= main.cpp stack_tests.cpp vector_tests.cpp
+SRCS	= main.cpp stack_tests.cpp vector_tests.cpp map_tests.cpp \
+		  tree_tests.cpp
 
 # Compiler stuff
 CC		= clang++
@@ -77,4 +78,4 @@ re: fclean
 
 .PHONY: run
 run: $(NAME)
-	./$(NAME) -g Vector
+	./$(NAME) -g Map
