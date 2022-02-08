@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/08 13:08:49 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/08 17:51:50 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,14 @@ public:
 	typedef pair<const Key, T>						value_type;
 	typedef std::size_t								size_type;
 	typedef std::ptrdiff_t							difference_type;
-	typedef tree<Key, T, Cmp, Allocator>			tree_type;
 	typedef Cmp										key_compare;
 	typedef Allocator								allocator_type;
 	typedef typename Allocator::reference			reference;
 	typedef typename Allocator::const_reference		const_reference;
 	typedef typename Allocator::pointer				pointer;
 	typedef typename Allocator::const_pointer		const_pointer;
+
+	typedef tree<Key, T, Cmp, Allocator>			tree_type;
 
 public:
 
