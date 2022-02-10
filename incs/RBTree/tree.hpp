@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/10 17:34:30 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/10 17:54:48 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,36 +218,56 @@ private:
 	}
 	void	insertFixup( node *lastInsertedNode )
 	{
+		node	*tmp;
+
 		while (lastInsertedNode->parent->color == RED)
 		{
-			if (lastInsertedNode->parent->isALeftChild())
-				colorFixup(lastInsertedNode, RIGHT);
+			if (lastInsertedNode->parent == lastInsertedNode->parent->parent->leftChild)
+			{
+				tmp = lastInsertedNode->parent->parent->rightChild;
+				if (tmp->color == RED)
+				{
+					lastInsertedNode->parent->color = BLACK;
+					tmp->color = BLACK;
+					lastInsertedNode->parent->parent->color = RED;
+					lastInsertedNode = lastInsertedNode->parent->parent;
+				}
+				else
+				{
+					if (lastInsertedNode == lastInsertedNode->parent->rightChild)
+					{
+						lastInsertedNode = lastInsertedNode->parent;
+						this->rotateLeft(lastInsertedNode);
+					}
+					lastInsertedNode->parent->color = BLACK;
+					lastInsertedNode->parent->parent->color = RED;
+					this->rotateRight(lastInsertedNode->parent->parent);
+				}
+			}
 			else
-				colorFixup(lastInsertedNode, LEFT);
+			{
+				tmp = lastInsertedNode->parent->parent->leftChild;
+				if (tmp->color == RED)
+				{
+					lastInsertedNode->parent->color = BLACK;
+					tmp->color = BLACK;
+					lastInsertedNode->parent->parent->color = RED;
+					lastInsertedNode = lastInsertedNode->parent->parent;
+				}
+				else
+				{
+					if (lastInsertedNode == lastInsertedNode->parent->leftChild)
+					{
+						lastInsertedNode = lastInsertedNode->parent;
+						this->rotateRight(lastInsertedNode);
+					}
+					lastInsertedNode->parent->color = BLACK;
+					lastInsertedNode->parent->parent->color = RED;
+					this->rotateLeft(lastInsertedNode->parent->parent);
+				}
+			}
 		}
 		this->_root->color = BLACK;
-	}
-	node*	colorFixup( node *lastInsertedNode, char side )
-	{
-		node*	tmp;
-
-		tmp = lastInsertedNode->parent->parent->getChild(side);
-		if (tmp->color == RED)
-		{
-			lastInsertedNode->parent->color = BLACK;
-			tmp->color = BLACK;
-			lastInsertedNode->parent->parent->color = RED;
-			return lastInsertedNode->parent->parent;
-		}
-		if (lastInsertedNode->parent->getChild(side) == lastInsertedNode)
-		{
-			lastInsertedNode = lastInsertedNode->parent;
-			this->rotateSide(lastInsertedNode, 1 - side);
-		}
-		lastInsertedNode->parent->color = BLACK;
-		lastInsertedNode->parent->parent->color = RED;
-		this->rotateSide(lastInsertedNode->parent->parent, side);
-		return lastInsertedNode;
 	}
 	node*	newNode( value_type &value )
 	{
