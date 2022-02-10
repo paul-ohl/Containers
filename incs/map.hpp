@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/10 17:08:26 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/10 18:48:25 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,16 @@ public:
 	}
 	~map( void )
 	{
-		/* this->_rbTree.clear(); */
+	}
+
+	map	&operator=( const map& other )
+	{
+		if (this == &other)
+			return *this;
+		map tmp(other);
+
+		this->swap(tmp);
+		return *this;
 	}
 
 	iterator	begin( void )
@@ -89,6 +98,22 @@ public:
 	{
 		return const_iterator(this->_rbTree.treeMaximum(), true);
 	}
+	reverse_iterator	rbegin( void )
+	{
+		return reverse_iterator(this->end());
+	}
+	const_reverse_iterator	rbegin( void ) const
+	{
+		return const_reverse_iterator(this->end());
+	}
+	reverse_iterator	rend( void )
+	{
+		return reverse_iterator(this->begin());
+	}
+	const_reverse_iterator	rend( void ) const
+	{
+		return const_reverse_iterator(this->begin());
+	}
 
 	size_type	size( void ) const { return _rbTree.size(); }
 	size_type	max_size( void ) const { return _rbTree.max_size(); }
@@ -106,6 +131,18 @@ public:
 			this->_rbTree.insertValue(*first);
 			first++;
 		}
+	}
+
+	void	swap( map& other )
+	{
+		allocator_type				tmp_valueAlloc = other._valueAlloc;
+		key_compare					tmp_comparator = other._comparator;
+
+		other._valueAlloc = this->_valueAlloc;
+		other._comparator = this->_comparator;
+		this->_valueAlloc = tmp_valueAlloc;
+		this->_comparator = tmp_comparator;
+		this->_rbTree.swap(other._rbTree);
 	}
 
 	void	printTree( void ) const

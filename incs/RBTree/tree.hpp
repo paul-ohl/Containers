@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/10 17:54:48 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/10 18:20:04 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,25 @@ public:
 		else
 			myfile << "Empty tree" << std::endl;
 		myfile.close();
+	}
+	void	swap ( tree& other )
+	{
+		node*					tmp_root = other._root;
+		node*					tmp_nil = other.nil;
+		size_type				tmp_size = other._size;
+		Cmp						tmp_comparator = other._comparator;
+		Allocator				tmp_valueAlloc = other._valueAlloc;
+
+		other._root = this->_root;
+		other.nil = this->nil;
+		other._size = this->_size;
+		other._comparator = this->_comparator;
+		other._valueAlloc = this->_valueAlloc;
+		this->_root = tmp_root;
+		this->nil = tmp_nil;
+		this->_size = tmp_size;
+		this->_comparator = tmp_comparator;
+		this->_valueAlloc = tmp_valueAlloc;
 	}
 
 private:
