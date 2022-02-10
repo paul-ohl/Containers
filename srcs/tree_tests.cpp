@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 13:00:50 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/08 17:33:44 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/10 17:27:57 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ IGNORE_TEST(TreeVisualisations, OneByOne)
 	{
 		std::cout << "Write key: ";
 		std::cin >> inputKey;
-		ft_char_map.insert(inputKey, mapped);
+		ft_char_map.insert(ft::make_pair(inputKey, mapped));
 		ft_char_map.printTree();
 	}
 }
@@ -48,7 +48,7 @@ TEST(TreeVisualisations, RandomFill)
 	{
 		key = rand() % amount * 5;
 		mapped = rand() % 26 + 97;
-		ft_char_map.insert(key, mapped);
+		ft_char_map.insert(ft::make_pair(key, mapped));
 	}
 	ft_char_map.printTree();
 }

@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/08 17:51:50 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/10 17:08:26 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define MAP_HPP
 
 # include "RBTree/tree.hpp"
+# include "iterators/map_iterator.hpp"
+# include "iterators/reverse_iterator.hpp"
 
 namespace ft
 {
@@ -25,19 +27,25 @@ class map
 
 public:
 
-	typedef Key										key_type;
-	typedef T										mapped_type;
-	typedef pair<const Key, T>						value_type;
-	typedef std::size_t								size_type;
-	typedef std::ptrdiff_t							difference_type;
-	typedef Cmp										key_compare;
-	typedef Allocator								allocator_type;
+	typedef Key					key_type;
+	typedef T					mapped_type;
+	typedef pair<const Key, T>	value_type;
+	typedef std::size_t			size_type;
+	typedef std::ptrdiff_t		difference_type;
+	typedef Cmp					key_compare;
+	typedef Allocator			allocator_type;
+
 	typedef typename Allocator::reference			reference;
 	typedef typename Allocator::const_reference		const_reference;
 	typedef typename Allocator::pointer				pointer;
 	typedef typename Allocator::const_pointer		const_pointer;
 
-	typedef tree<Key, T, Cmp, Allocator>			tree_type;
+	typedef map_iterator<const Key, T, Cmp>									iterator;
+	typedef map_iterator<const Key, T, Cmp, true>							const_iterator;
+	typedef ft::reverse_iterator<map_iterator<const Key, T, Cmp> >			reverse_iterator;
+	typedef ft::reverse_iterator<map_iterator<const Key, T, Cmp, true> >	const_reverse_iterator;
+
+	typedef tree<const Key, T, Cmp, Allocator>			tree_type;
 
 public:
 
@@ -47,18 +55,57 @@ public:
 	{
 		return;
 	}
+	template< typename InputIt >
+	map( InputIt first, InputIt last, const key_compare &cmp = key_compare(),
+			const Allocator &alloc = Allocator() ):
+		_comparator(cmp), _valueAlloc(alloc)
+	{
+		this->insert(first, last);
+	}
+	map( const map& other )
+	{
+		this->_rbTree = other._rbTree;
+		this->_comparator = other._comparator;
+		this->_valueAlloc = other._valueAlloc;
+	}
 	~map( void )
 	{
-		_rbTree.clear();
+		/* this->_rbTree.clear(); */
 	}
 
-	void	insert( const key_type &key, mapped_type &mapped )
+	iterator	begin( void )
 	{
-		this->insert(make_pair(key, mapped));
+		return iterator(this->_rbTree.treeMinimum());
 	}
+	const_iterator	begin( void ) const
+	{
+		return const_iterator(this->_rbTree.treeMinimum());
+	}
+	iterator	end( void )
+	{
+		return iterator(this->_rbTree.treeMaximum(), true);
+	}
+	const_iterator	end( void ) const
+	{
+		return const_iterator(this->_rbTree.treeMaximum(), true);
+	}
+
+	size_type	size( void ) const { return _rbTree.size(); }
+	size_type	max_size( void ) const { return _rbTree.max_size(); }
+
 	void	insert( value_type value )
 	{
 		this->_rbTree.insertValue(value);
+	}
+	template< typename InputIt >
+	void	insert( InputIt first, InputIt last )
+	{
+
+		while (first != last)
+		{
+			this->_rbTree.insertValue(*first);
+			first++;
+		}
 	}
 
 	void	printTree( void ) const

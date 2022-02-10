@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:50 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/08 12:48:12 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/10 14:54:33 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ class node
 
 public:
 
-	typedef Key								key_type;
+	typedef const Key						key_type;
 	typedef T								mapped_type;
 	typedef pair<const Key, T>				value_type;
 	typedef std::size_t						size_type;
@@ -47,6 +47,10 @@ public:
 		parent(NULL), rightChild(NULL), leftChild(NULL), color(RED), value(value)
 	{ return; }
 
+	bool			isNil( void) const
+	{
+		return this->parent == NULL;
+	}
 	bool	isALeftChild( void ) const
 	{
 		return this->parent->leftChild == this;
@@ -63,7 +67,9 @@ public:
 			return this->rightChild;
 		throw std::invalid_argument("You can only use value LEFT (0) and RIGHT (1)");
 	}
-	value_type&		getValue( void ) const { return value; }
+
+	value_type&		getValue( void ) { return value; }
+	const value_type&		getValue( void ) const { return value; }
 	const key_type&	getKey( void ) const { return value.first; }
 	mapped_type&	getMapped( void ) { return value.second; }
 	const mapped_type&	getMapped( void ) const { return value.second; }
@@ -77,6 +83,103 @@ public:
 	char			getColorAsChar( void ) const
 	{
 		return this->color;
+	}
+
+	node*	getTreeMinimum( void )
+	{
+		node*	treeMinimum = this;
+
+		while (!treeMinimum->leftChild->isNil())
+			treeMinimum = treeMinimum->leftChild;
+		return treeMinimum;
+	}
+	const node*	getTreeMinimum( void ) const
+	{
+		const node*	treeMinimum = this;
+
+		while (!treeMinimum->leftChild->isNil())
+			treeMinimum = treeMinimum->leftChild;
+		return treeMinimum;
+	}
+	node*	getTreeMaximum( void )
+	{
+		node*	treeMaximum = this;
+
+		while (!treeMaximum->rightChild->isNil())
+			treeMaximum = treeMaximum->rightChild;
+		return treeMaximum;
+	}
+	const node*	getTreeMaximum( void ) const
+	{
+		const node*	treeMaximum = this;
+
+		while (!treeMaximum->rightChild->isNil())
+			treeMaximum = treeMaximum->rightChild;
+		return treeMaximum;
+	}
+	node*	getTreeSuccessor( const node *current_node = NULL )
+	{
+		node*	tmp;
+
+		if (current_node == NULL)
+			current_node = this;
+		if (!current_node->rightChild->isNil())
+			return current_node->rightChild->getTreeMinimum();
+		tmp = current_node->parent;
+		while ((!tmp->isNil()) && current_node == tmp->rightChild)
+		{
+			current_node = tmp;
+			tmp = tmp->parent;
+		}
+		return tmp;
+	}
+	const node*	getTreeSuccessor( const node *current_node = NULL ) const
+	{
+		const node*	tmp;
+
+		if (current_node == NULL)
+			current_node = this;
+		if (!current_node->rightChild->isNil())
+			return current_node->rightChild->getTreeMinimum();
+		tmp = current_node->parent;
+		while ((!tmp->isNil()) && current_node == tmp->rightChild)
+		{
+			current_node = tmp;
+			tmp = tmp->parent;
+		}
+		return tmp;
+	}
+	node*	getTreePredecessor( const node *current_node = NULL )
+	{
+		node*	tmp;
+
+		if (current_node == NULL)
+			current_node = this;
+		if (!current_node->leftChild->isNil())
+			return current_node->leftChild->getTreeMaximum();
+		tmp = current_node->parent;
+		while ((!tmp->isNil()) && current_node == tmp->leftChild)
+		{
+			current_node = tmp;
+			tmp = tmp->parent;
+		}
+		return tmp;
+	}
+	const node*	getTreePredecessor( const node *current_node = NULL ) const
+	{
+		const node*	tmp;
+
+		if (current_node == NULL)
+			current_node = this;
+		if (!current_node->leftChild->isNil())
+			return current_node->leftChild->getTreeMaximum();
+		tmp = current_node->parent;
+		while ((!tmp->isNil()) && current_node == tmp->leftChild)
+		{
+			current_node = tmp;
+			tmp = tmp->parent;
+		}
+		return tmp;
 	}
 
 public:
