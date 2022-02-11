@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/10 18:48:25 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/11 17:23:28 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,11 +76,15 @@ public:
 	{
 		if (this == &other)
 			return *this;
-		map tmp(other);
-
-		this->swap(tmp);
+		this->_rbTree = other._rbTree;
+		this->_comparator = other._comparator;
+		this->_valueAlloc = other._valueAlloc;
 		return *this;
 	}
+
+	/* mapped_type&	operator[]( const key_type& key ) */
+	/* { */
+	/* } */
 
 	iterator	begin( void )
 	{
@@ -115,22 +119,31 @@ public:
 		return const_reverse_iterator(this->begin());
 	}
 
+	bool		empty( void ) const { return _rbTree.size() == 0; }
 	size_type	size( void ) const { return _rbTree.size(); }
 	size_type	max_size( void ) const { return _rbTree.max_size(); }
 
-	void	insert( value_type value )
+	ft::pair<iterator, bool>	insert( const value_type& value )
 	{
-		this->_rbTree.insertValue(value);
+		bool		wasInserted = false;
+		iterator	inserted = this->_rbTree.insertValue(value, wasInserted);
+
+		return ft::make_pair(iterator(inserted), wasInserted);
 	}
 	template< typename InputIt >
 	void	insert( InputIt first, InputIt last )
 	{
+		bool useless;
 
 		while (first != last)
 		{
-			this->_rbTree.insertValue(*first);
+			this->_rbTree.insertValue(*first, useless);
 			first++;
 		}
+	}
+	void	clear( void )
+	{
+		this->_rbTree.clear();
 	}
 
 	void	swap( map& other )

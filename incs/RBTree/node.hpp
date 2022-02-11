@@ -6,12 +6,14 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:50 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/10 14:54:33 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/11 12:18:56 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef NODE_HPP
 # define NODE_HPP
+
+#include <iostream>
 
 # include <stdexcept>
 # include "utils/pair.hpp"
@@ -46,10 +48,22 @@ public:
 	node( value_type &value ):
 		parent(NULL), rightChild(NULL), leftChild(NULL), color(RED), value(value)
 	{ return; }
+	~node( void )
+	{
+		return;
+	}
+
+	node&	operator=( const node& other )
+	{
+		this->parent = other.parent;
+		this->rightChild = other.rightChild;
+		this->leftChild = other.leftChild;
+		this->color = other.color;
+	}
 
 	bool			isNil( void) const
 	{
-		return this->parent == NULL;
+		return this->parent == this;
 	}
 	bool	isALeftChild( void ) const
 	{

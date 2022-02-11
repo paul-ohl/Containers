@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/10 18:20:04 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/11 17:21:17 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,15 @@ public:
 	}
 	tree( const tree& other ): _nodeAlloc(other._nodeAlloc)
 	{
+		this->_nodeAlloc = std::allocator<node>();
+		this->initializeNil();
 		*this = other;
 	}
 	~tree( void )
 	{
 		this->clear();
+		deleteNode(this->nil);
+		this->nil = NULL;
 	}
 
 	tree&	operator=( const tree& other )
@@ -57,9 +61,7 @@ public:
 			return *this;
 		this->clear();
 		this->_comparator = other._comparator;
-		this->_nodeAlloc = other._nodeAlloc;
 		this->_valueAlloc = other._valueAlloc;
-		this->initializeNil();
 		this->_root = this->clone(other._root);
 		this->_size = other._size;
 		return *this;
@@ -73,7 +75,7 @@ public:
 	{
 		if (!_root->isNil())
 			clearNodesRecursively(_root);
-		deleteNode(this->nil);
+		this->_root = this->nil;
 	}
 	void	rotateLeft( node *hinge )
 	{
@@ -83,11 +85,28 @@ public:
 	{
 		this->rotateSide(hinge, RIGHT);
 	}
-	void	insertValue( value_type &value )
+	node*	insertValue( const value_type& value, bool &wasInserted )
 	{
-		node	*nodeToInsert = newNode(value);
+		node	*insertionParent = getInsertionParent(value.first);
+		node	*nodeToInsert;
 
-		this->insertNode(nodeToInsert);
+		if (value.first == insertionParent->getKey())
+		{
+			wasInserted = false;
+			return insertionParent;
+		}
+		nodeToInsert = newNode(value);
+		nodeToInsert->parent = insertionParent;
+		if (insertionParent->isNil())
+			this->_root = nodeToInsert;
+		else if (_comparator(nodeToInsert->getKey(), insertionParent->getKey()))
+			insertionParent->leftChild = nodeToInsert;
+		else
+			insertionParent->rightChild = nodeToInsert;
+		this->insertFixup(nodeToInsert);
+		this->_size++;
+		wasInserted = true;
+		return nodeToInsert;
 	}
 
 	const node*	treeSearch( const key_type& key ) const
@@ -147,7 +166,7 @@ public:
 		other._comparator = this->_comparator;
 		other._valueAlloc = this->_valueAlloc;
 		this->_root = tmp_root;
-		this->nil = tmp_nil;
+		this->_nil = tmp_nil;
 		this->_size = tmp_size;
 		this->_comparator = tmp_comparator;
 		this->_valueAlloc = tmp_valueAlloc;
@@ -170,9 +189,9 @@ private:
 
 		this->nil = this->newNode(nilValue);
 		this->nil->color = BLACK;
-		this->nil->parent = NULL;
-		this->nil->leftChild = NULL;
-		this->nil->rightChild = NULL;
+		this->nil->parent = this->nil;
+		this->nil->leftChild = this->nil;
+		this->nil->rightChild = this->nil;
 	}
 
 	void	clearNodesRecursively( node *to_delete )
@@ -182,20 +201,7 @@ private:
 		if (!to_delete->rightChild->isNil())
 			clearNodesRecursively(to_delete->rightChild);
 		deleteNode(to_delete);
-	}
-	void	insertNode( node *nodeToInsert )
-	{
-		node	*insertionParent = getInsertionParent(nodeToInsert->getKey());
-
-		nodeToInsert->parent = insertionParent;
-		if (insertionParent->isNil())
-			this->_root = nodeToInsert;
-		else if (_comparator(nodeToInsert->getKey(), insertionParent->getKey()))
-			insertionParent->leftChild = nodeToInsert;
-		else
-			insertionParent->rightChild = nodeToInsert;
-		this->insertFixup(nodeToInsert);
-		this->_size++;
+		this->_size--;
 	}
 	void	rotateSide( node *hinge, char side )
 	{
@@ -288,7 +294,7 @@ private:
 		}
 		this->_root->color = BLACK;
 	}
-	node*	newNode( value_type &value )
+	node*	newNode( const value_type &value )
 	{
 		node	*newNode = _nodeAlloc.allocate(1);
 
