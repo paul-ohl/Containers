@@ -1,0 +1,11 @@
+tags
+.DS_Store
+a.out*
+objs/
+deps/
+*testest*
+ft_containers
+result.png
+tree_visualisation.mmd
+containers_test
+.cache
