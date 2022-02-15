@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 09:27:44 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 18:05:34 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "RBTree/tree.hpp"
 # include "iterators/map_iterator.hpp"
-# include "iterators/reverse_iterator.hpp"
+# include "iterators/map_reverse_iterator.hpp"
 
 namespace ft
 {
@@ -40,10 +40,10 @@ public:
 	typedef typename Allocator::pointer				pointer;
 	typedef typename Allocator::const_pointer		const_pointer;
 
-	typedef map_iterator<const Key, T, Cmp>									iterator;
-	typedef map_iterator<const Key, T, Cmp, true>							const_iterator;
-	typedef ft::reverse_iterator<map_iterator<const Key, T, Cmp> >			reverse_iterator;
-	typedef ft::reverse_iterator<map_iterator<const Key, T, Cmp, true> >	const_reverse_iterator;
+	typedef map_iterator<const Key, T, Cmp>						iterator;
+	typedef map_iterator<const Key, T, Cmp, true>				const_iterator;
+	typedef ft::map_reverse_iterator<const Key, T, Cmp>			reverse_iterator;
+	typedef ft::map_reverse_iterator<const Key, T, Cmp, true>	const_reverse_iterator;
 
 	typedef tree<const Key, T, Cmp, Allocator>			tree_type;
 
@@ -119,24 +119,26 @@ public:
 	}
 	reverse_iterator	rbegin( void )
 	{
-		return reverse_iterator(this->end());
+		return reverse_iterator(this->_rbTree.treeMaximum(), false);
 	}
 	const_reverse_iterator	rbegin( void ) const
 	{
-		return const_reverse_iterator(this->end());
+		return const_reverse_iterator(this->_rbTree.treeMaximum(), false);
 	}
 	reverse_iterator	rend( void )
 	{
-		return reverse_iterator(this->begin());
+		return reverse_iterator(this->_rbTree.treeMinimum(), true);
 	}
 	const_reverse_iterator	rend( void ) const
 	{
-		return const_reverse_iterator(this->begin());
+		return const_reverse_iterator(this->_rbTree.treeMinimum(), true);
 	}
 
 	bool		empty( void ) const { return _rbTree.size() == 0; }
 	size_type	size( void ) const { return _rbTree.size(); }
 	size_type	max_size( void ) const { return _rbTree.max_size(); }
+
+	key_compare	key_comp( void ) const { return this->_comparator; }
 
 	ft::pair<iterator, bool>	insert( const value_type& value )
 	{
@@ -144,6 +146,15 @@ public:
 		iterator	inserted = this->_rbTree.insertValue(value, wasInserted);
 
 		return ft::make_pair(iterator(inserted), wasInserted);
+	}
+	iterator	insert( iterator position, const value_type& value )
+	{
+		bool placeholder = false;
+
+		if ((*position).first + 1 == value.first)
+			return this->_rbTree.insertValue(position.getNode(), value,
+					placeholder);
+		return this->_rbTree.insertValue(value, placeholder);
 	}
 	template< typename InputIt >
 	void	insert( InputIt first, InputIt last )
@@ -156,6 +167,21 @@ public:
 			first++;
 		}
 	}
+
+	void	erase( iterator position )
+	{
+		this->_rbTree.eraseNode(position.getNode());
+	}
+	void	erase( iterator first, iterator last )
+	{
+		while (first != last)
+			this->_rbTree.eraseNode((first++).getNode());
+	}
+	size_type	erase( const key_type& key )
+	{
+		return this->_rbTree.eraseNodeFromKey(key);
+	}
+
 	void	clear( void )
 	{
 		this->_rbTree.clear();
@@ -186,7 +212,7 @@ private:
 
 	bool	alreadyExists( const key_type& key ) const
 	{
-		return _rbTree.treeSearch(key)->isNil();
+		return _rbTree.findNode(key)->isNil();
 	}
 
 };

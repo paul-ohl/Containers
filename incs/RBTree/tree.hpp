@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 09:27:10 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 17:03:43 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,9 +88,16 @@ public:
 	node*	insertValue( const value_type& value, bool &wasInserted )
 	{
 		node	*insertionParent = getInsertionParent(value.first);
+
+		return insertValue(insertionParent, value, wasInserted);
+	}
+	node*	insertValue( node* insertionParent, const value_type& value,
+			bool &wasInserted )
+	{
 		node	*nodeToInsert;
 
-		if (value.first == insertionParent->getKey())
+		if (value.first == insertionParent->getKey()
+				&& !insertionParent->isNil())
 		{
 			wasInserted = false;
 			return insertionParent;
@@ -108,18 +115,77 @@ public:
 		wasInserted = true;
 		return nodeToInsert;
 	}
-
-	const node*	treeSearch( const key_type& key ) const
+	size_type	eraseNodeFromKey( const key_type& key )
 	{
-		return this->treeSearch( this->_root, key );
+		node	*foundNode = this->findNode(key);
+		if (foundNode->isNil())
+			return 0;
+		eraseNode(foundNode);
+		return 1;
 	}
-	const node*	treeSearch( node* current_node, const key_type& key ) const
+	void	eraseNode( node* toDelete )
+	{
+		node*	x = this->nil;
+		node*	y = toDelete;
+		char	yOriginalColor = y->color;
+
+		if (toDelete->leftChild->isNil())
+		{
+			x = toDelete->rightChild;
+			transplant(toDelete, toDelete->rightChild);
+		}
+		else if (toDelete->rightChild->isNil())
+		{
+			x = toDelete->leftChild;
+			transplant(toDelete, toDelete->leftChild);
+		}
+		else
+		{
+			y = toDelete->rightChild->getTreeMinimum();
+			yOriginalColor = y->color;
+			x = y->rightChild;
+			if (y->parent == toDelete)
+				x->parent = y;
+			else
+			{
+				transplant(y, y->rightChild);
+				y->rightChild = toDelete->rightChild;
+				y->rightChild->parent = y;
+			}
+			transplant(toDelete, y);
+			y->leftChild = toDelete->leftChild;
+			y->leftChild->parent = y;
+			y->color = toDelete->color;
+		}
+		if (yOriginalColor == BLACK)
+			deleteFixup(x);
+		this->_size--;
+		deleteNode(toDelete);
+	}
+
+	node*	findNode( const key_type& key )
+	{
+		return this->findNode( this->_root, key );
+	}
+	node*	findNode( node* current_node, const key_type& key )
 	{
 		if (current_node->isNil() || current_node->getKey() == key)
 			return current_node;
 		if (_comparator(key, current_node->getKey()))
-			return this->treeSearch(current_node->leftChild, key);
-		return this->treeSearch(current_node->rightChild, key);
+			return this->findNode(current_node->leftChild, key);
+		return this->findNode(current_node->rightChild, key);
+	}
+	const node*	findNode( const key_type& key ) const
+	{
+		return this->findNode( this->_root, key );
+	}
+	const node*	findNode( node* current_node, const key_type& key ) const
+	{
+		if (current_node->isNil() || current_node->getKey() == key)
+			return current_node;
+		if (_comparator(key, current_node->getKey()))
+			return this->findNode(current_node->leftChild, key);
+		return this->findNode(current_node->rightChild, key);
 	}
 	node*	treeMinimum( void )
 	{
@@ -166,7 +232,7 @@ public:
 		other._comparator = this->_comparator;
 		other._valueAlloc = this->_valueAlloc;
 		this->_root = tmp_root;
-		this->_nil = tmp_nil;
+		this->nil = tmp_nil;
 		this->_size = tmp_size;
 		this->_comparator = tmp_comparator;
 		this->_valueAlloc = tmp_valueAlloc;
@@ -183,6 +249,89 @@ private:
 
 private:
 
+	void	transplant( node* oldNode, node* newNode )
+	{
+		if (oldNode->parent->isNil())
+			this->_root = newNode;
+		else if (oldNode->isALeftChild())
+			oldNode->parent->leftChild = newNode;
+		else
+			oldNode->parent->rightChild = newNode;
+		if (!newNode->isNil())
+			newNode->parent = oldNode->parent;
+	}
+	void	deleteFixup( node* x )
+	{
+		node*	w = this->nil;
+
+		while (x != this->_root && x->color == BLACK)
+		{
+			if (x == x->parent->leftChild)
+			{
+				w = x->parent->rightChild;
+				if (w->color == RED)
+				{
+					w->color = BLACK;
+					x->parent->color = RED;
+					rotateLeft(x->parent);
+					w = x->parent->rightChild;
+				}
+				if (w->leftChild->color == BLACK && w->rightChild->color == BLACK)
+				{
+					w->color = RED;
+					x = x->parent;
+				}
+				else
+				{
+					if (w->rightChild->color == BLACK)
+					{
+						w->leftChild->color = BLACK;
+						w->color = RED;
+						rotateRight(w);
+						w = x->parent->rightChild;
+					}
+					w->color = x->parent->color;
+					x->parent->color = BLACK;
+					w->rightChild->color = BLACK;
+					rotateLeft(x->parent);
+					x = this->_root;
+				}
+			}
+			else
+			{
+				w = x->parent->leftChild;
+				if (w->color == RED)
+				{
+					w->color = BLACK;
+					x->parent->color = RED;
+					rotateRight(x->parent);
+					w = x->parent->leftChild;
+				}
+				if (w->rightChild->color == BLACK && w->leftChild->color == BLACK)
+				{
+					w->color = RED;
+					x = x->parent;
+				}
+				else
+				{
+					if (w->leftChild->color == BLACK)
+					{
+						w->rightChild->color = BLACK;
+						w->color = RED;
+						rotateLeft(w);
+						w = x->parent->leftChild;
+					}
+					w->color = x->parent->color;
+					x->parent->color = BLACK;
+					w->leftChild->color = BLACK;
+					rotateRight(x->parent);
+					x = this->_root;
+				}
+			}
+		}
+		x->color = BLACK;
+	}
+
 	void	initializeNil( void )
 	{
 		value_type	nilValue = ft::make_pair(Key(), T());
@@ -194,13 +343,13 @@ private:
 		this->nil->rightChild = this->nil;
 	}
 
-	void	clearNodesRecursively( node *to_delete )
+	void	clearNodesRecursively( node *toDelete )
 	{
-		if (!to_delete->leftChild->isNil())
-			clearNodesRecursively(to_delete->leftChild);
-		if (!to_delete->rightChild->isNil())
-			clearNodesRecursively(to_delete->rightChild);
-		deleteNode(to_delete);
+		if (!toDelete->leftChild->isNil())
+			clearNodesRecursively(toDelete->leftChild);
+		if (!toDelete->rightChild->isNil())
+			clearNodesRecursively(toDelete->rightChild);
+		deleteNode(toDelete);
 		this->_size--;
 	}
 	void	rotateSide( node *hinge, char side )

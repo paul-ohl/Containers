@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:50 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/11 12:18:56 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 15:41:37 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,9 +102,13 @@ public:
 	node*	getTreeMinimum( void )
 	{
 		node*	treeMinimum = this;
+		node*	hisParent;
 
 		while (!treeMinimum->leftChild->isNil())
+		{
+			hisParent = treeMinimum->parent;
 			treeMinimum = treeMinimum->leftChild;
+		}
 		return treeMinimum;
 	}
 	const node*	getTreeMinimum( void ) const

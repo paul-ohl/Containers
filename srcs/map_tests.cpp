@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:59:01 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 09:27:55 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 18:21:47 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	compareContent( StdMap& stdMap, FtMap& ftMap, bool print = false )
 		CHECK_EQUAL_TEXT(stdMap.size(), ftMap.size(), "Size");
 		CHECK_EQUAL_TEXT(stdMap.max_size() , ftMap.max_size(), "Max Size");
 	}
-	while (ft_begin != ft_end)
+	while (std_begin != std_end)
 		checkIteratorsEqual(std_begin++, ft_begin++, print);
 }
 
@@ -163,12 +163,10 @@ TEST(MapMemberFunctions, EqualOperator)
 	ft_char_map_copy = ft_char_map;
 	ft_string_map_copy = ft_string_map;
 	std_string_map_copy = std_string_map;
-	ft_char_map_copy.printTree();
 
 	std_char_map.insert(std::make_pair(42, 'x'));
 	ft_char_map.insert(ft::make_pair(42, 'x'));
 
-	ft_char_map_copy.printTree();
 	compareContent(std_char_map, ft_char_map);
 	compareContent(std_string_map, ft_string_map);
 	compareContent(std_char_map_copy, ft_char_map_copy);
@@ -347,7 +345,7 @@ TEST_GROUP(MapReverseIterators)
 	}
 };
 
-IGNORE_TEST(MapReverseIterators, Arithmetics)
+TEST(MapReverseIterators, Arithmetics)
 {
 	std_char_map_it = std_char_map.rbegin();
 	std_char_map_ite = std_char_map.rend();
@@ -392,7 +390,7 @@ IGNORE_TEST(MapReverseIterators, Arithmetics)
 	CHECK_EQUAL((std_string_map_it != std_string_map_ite), (ft_string_map_it != ft_string_map_ite));
 }
 
-IGNORE_TEST(MapReverseIterators, Base)
+TEST(MapReverseIterators, Base)
 {
 	std_char_map_it = std_char_map.rbegin();
 	std_char_map_ite = std_char_map.rend();
@@ -403,9 +401,6 @@ IGNORE_TEST(MapReverseIterators, Base)
 	ft_string_map_it = ft_string_map.rbegin();
 	ft_string_map_ite = ft_string_map.rend();
 
-	checkIteratorsEqual(std_char_map_it.base(), ft_char_map_it.base());
-	checkIteratorsEqual(std_string_map_it.base(), ft_string_map_it.base());
-
 	std_char_map_it++;
 	ft_char_map_it++;
 	std_string_map_it++;
@@ -413,6 +408,7 @@ IGNORE_TEST(MapReverseIterators, Base)
 
 	checkIteratorsEqual(std_char_map_it.base(), ft_char_map_it.base());
 	checkIteratorsEqual(std_string_map_it.base(), ft_string_map_it.base());
+
 	checkIteratorsEqual(std_char_map_ite.base(), ft_char_map_ite.base());
 	checkIteratorsEqual(std_string_map_ite.base(), ft_string_map_ite.base());
 }
@@ -477,12 +473,8 @@ TEST_GROUP(MapCapacity)
 TEST(MapCapacity, Empty)
 {
 	/* std::cout << "MapCapacity.Empty" << std::endl; */
-	ft_char_map.printTree();
-	ft_string_map.printTree();
 	CHECK_EQUAL(std_char_map.empty(), ft_char_map.empty());
 	CHECK_EQUAL(std_string_map.empty(), ft_string_map.empty());
-	ft_char_map.printTree();
-	ft_string_map.printTree();
 
 	std_char_map.clear();
 	ft_char_map.clear();
@@ -568,7 +560,7 @@ void	compareInsertionReturn( std::pair<StdIt, bool> std_res,  ft::pair<FtIt, boo
 	checkIteratorsEqual(std_res.first, ft_res.first, false);
 }
 
-TEST(MapModifiers, Insertion)
+TEST(MapModifiers, MapBasicInsertion)
 {
 	std::pair<std::map<int, char>::iterator, bool>			std_char_result;
 	ft::pair<ft::map<int, char>::iterator, bool>			ft_char_result;
@@ -601,6 +593,47 @@ TEST(MapModifiers, Insertion)
 
 	compareInsertionReturn(std_char_result, ft_char_result);
 	compareInsertionReturn(std_string_result, ft_string_result);
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+}
+
+TEST(MapModifiers, MapIteratorInsertion)
+{
+	std_list_char.push_back(std::make_pair(101, 'a'));
+	std_list_char.push_back(std::make_pair(102, 'x'));
+	ft_list_char.push_back(ft::make_pair(101, 'a'));
+	ft_list_char.push_back(ft::make_pair(102, 'x'));
+	std_list_string.push_back(std::make_pair(101, "asdf"));
+	std_list_string.push_back(std::make_pair(102, "xcvv"));
+	ft_list_string.push_back(ft::make_pair(101, "asdf"));
+	ft_list_string.push_back(ft::make_pair(102, "xcvv"));
+
+	std_char_map.insert(++(++std_list_char.begin()), std_list_char.end());
+	ft_char_map.insert(++(++ft_list_char.begin()), ft_list_char.end());
+	std_string_map.insert(++(++std_list_string.begin()), std_list_string.end());
+	ft_string_map.insert(++(++ft_list_string.begin()), ft_list_string.end());
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+}
+
+TEST(MapModifiers, MapHintInsertion)
+{
+	std::map<int, char>::iterator			std_char_it = --std_char_map.end();
+	ft::map<int, char>::iterator			ft_char_it = --ft_char_map.end();
+	std::map<int, std::string>::iterator	std_string_it = --std_string_map.end();
+	ft::map<int, std::string>::iterator		ft_string_it = --ft_string_map.end();
+
+	std_char_map.insert(std_char_it, std::pair<int, char>(10, 'j'));  // max efficiency inserting
+	ft_char_map.insert(ft_char_it, ft::pair<int, char>(10, 'j'));  // max efficiency inserting
+	std_string_map.insert(std_string_it, std::pair<int, std::string>(10, "j"));  // max efficiency inserting
+	ft_string_map.insert(ft_string_it, ft::pair<int, std::string>(10, "j"));  // max efficiency inserting
+
+	std_char_map.insert(std_char_it, std::pair<int, char>(12, 'j'));  // max efficiency inserting
+	ft_char_map.insert(ft_char_it, ft::pair<int, char>(12, 'j'));  // max efficiency inserting
+	std_string_map.insert(std_string_it, std::pair<int, std::string>(12, "j"));  // max efficiency inserting
+	ft_string_map.insert(ft_string_it, ft::pair<int, std::string>(12, "j"));  // max efficiency inserting
 
 	compareContent(std_char_map, ft_char_map);
 	compareContent(std_string_map, ft_string_map);
@@ -665,4 +698,130 @@ TEST(MapModifiers, MapAt)
 
 	compareContent(std_char_map, ft_char_map);
 	compareContent(std_string_map, ft_string_map);
+}
+
+TEST(MapModifiers, MapErase)
+{
+	std_char_map.erase(--std_char_map.end());
+	ft_char_map.erase(--ft_char_map.end());
+	std_string_map.erase(--std_string_map.end());
+	ft_string_map.erase(--ft_string_map.end());
+
+	std_char_map.erase(std_char_map.begin());
+	ft_char_map.erase(ft_char_map.begin());
+	std_string_map.erase(std_string_map.begin());
+	ft_string_map.erase(ft_string_map.begin());
+
+	std_char_map.erase(5);
+	ft_char_map.erase(5);
+	std_string_map.erase(5);
+	ft_string_map.erase(5);
+
+	std_char_map.erase(++std_char_map.begin(), ++(++(++std_char_map.begin())));
+	ft_char_map.erase(++ft_char_map.begin(), ++(++(++ft_char_map.begin())));
+	std_string_map.erase(++std_string_map.begin(), ++(++(++std_string_map.begin())));
+	ft_string_map.erase(++ft_string_map.begin(), ++(++(++ft_string_map.begin())));
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+
+	std_char_map.erase(std_char_map.begin(), std_char_map.begin());
+	ft_char_map.erase(ft_char_map.begin(), ft_char_map.begin());
+	std_string_map.erase(std_string_map.begin(), std_string_map.begin());
+	ft_string_map.erase(ft_string_map.begin(), ft_string_map.begin());
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+}
+
+TEST(MapModifiers, MapSwap)
+{
+	std::map<int, char>			other_std_char_map;
+	ft::map<int, char>			other_ft_char_map;
+	std::map<int, std::string>	other_std_string_map;
+	ft::map<int, std::string>	other_ft_string_map;
+
+	std::map<int, char>::iterator			std_char_map_it;
+	ft::map<int, char>::iterator			ft_char_map_it;
+	std::map<int, std::string>::iterator	std_string_map_it;
+	ft::map<int, std::string>::iterator		ft_string_map_it;
+
+	for (int i = 0; i < 5; i++)
+	{
+		other_std_char_map.insert(std::make_pair(i * 5, i + 64));
+		other_ft_char_map.insert(ft::make_pair(i * 5, i + 64));
+	}
+	other_std_string_map.insert(std::make_pair(10, "qwer"));
+	other_std_string_map.insert(std::make_pair(11, "asdf"));
+	other_std_string_map.insert(std::make_pair(12, "zxcv"));
+	other_std_string_map.insert(std::make_pair(12, "hjkl"));
+	other_std_string_map.insert(std::make_pair(13, "yuio"));
+	other_ft_string_map.insert(ft::make_pair(10, "qwer"));
+	other_ft_string_map.insert(ft::make_pair(11, "asdf"));
+	other_ft_string_map.insert(ft::make_pair(12, "zxcv"));
+	other_ft_string_map.insert(ft::make_pair(12, "hjkl"));
+	other_ft_string_map.insert(ft::make_pair(13, "yuio"));
+	other_ft_string_map.printTree();
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+	compareContent(other_std_char_map, other_ft_char_map);
+	compareContent(other_std_string_map, other_ft_string_map);
+
+	ft_char_map_it = ft_char_map.begin();
+	ft_string_map_it = ft_string_map.begin();
+
+	std_char_map.swap(other_std_char_map);
+	ft_char_map.swap(other_ft_char_map);
+	std_string_map.swap(other_std_string_map);
+	ft_string_map.swap(other_ft_string_map);
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+	compareContent(other_std_char_map, other_ft_char_map);
+	compareContent(other_std_string_map, other_ft_string_map);
+
+	POINTERS_EQUAL(&(*ft_char_map_it), &(*other_ft_char_map.begin()));
+	POINTERS_EQUAL(&(*ft_string_map_it), &(*other_ft_string_map.begin()));
+}
+
+TEST(MapModifiers, MapClear)
+{
+	std_char_map.clear();
+	ft_char_map.clear();
+	std_string_map.clear();
+	ft_string_map.clear();
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+}
+
+TEST_GROUP(MapMiscellaneous)
+{
+};
+
+TEST(MapMiscellaneous, MapKeyComp)
+{
+	  std::map<char,int>	stdmap;
+	  ft::map<char,int>		ftmap;
+
+	  ft::map<char,int>::key_compare ftcomp = ftmap.key_comp();
+
+	  stdmap['a']=100;
+	  ftmap['a']=100;
+	  stdmap['b']=200;
+	  ftmap['b']=200;
+	  stdmap['c']=300;
+	  ftmap['c']=300;
+
+	  char stdhighest = stdmap.rbegin()->first;     // key value of last element
+	  char fthighest = ftmap.rbegin()->first;     // key value of last element
+
+	  CHECK_EQUAL(stdhighest, fthighest);
+	  std::map<char,int>::iterator stdit = stdmap.begin();
+	  ft::map<char,int>::iterator ftit = ftmap.begin();
+	  do {
+		  checkIteratorsEqual(stdit, ftit);
+		  stdit++;
+	  } while ( ftcomp((*ftit++).first, fthighest) );
 }
