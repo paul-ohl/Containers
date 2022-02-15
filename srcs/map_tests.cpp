@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:59:01 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/11 17:26:00 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 09:27:55 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	compareContent( StdMap& stdMap, FtMap& ftMap, bool print = false )
 		CHECK_EQUAL_TEXT(stdMap.size(), ftMap.size(), "Size");
 		CHECK_EQUAL_TEXT(stdMap.max_size() , ftMap.max_size(), "Max Size");
 	}
-	while (std_begin != std_end)
+	while (ft_begin != ft_end)
 		checkIteratorsEqual(std_begin++, ft_begin++, print);
 }
 
@@ -583,31 +583,86 @@ TEST(MapModifiers, Insertion)
 	std_string_result = std_string_map.insert(std::make_pair(42, "x"));
 	ft_string_result = ft_string_map.insert(ft::make_pair(42, "x"));
 
-	/* compareInsertionReturn(std_char_result, ft_char_result); */
-	/* compareInsertionReturn(std_string_result, ft_string_result); */
+	compareInsertionReturn(std_char_result, ft_char_result);
+	compareInsertionReturn(std_string_result, ft_string_result);
 
 	std_char_result = std_char_map.insert(std::make_pair(2, 'x'));
 	ft_char_result = ft_char_map.insert(ft::make_pair(2, 'x'));
 	std_string_result = std_string_map.insert(std::make_pair(2, "x"));
 	ft_string_result = ft_string_map.insert(ft::make_pair(2, "x"));
 
-	/* compareInsertionReturn(std_char_result, ft_char_result); */
-	/* compareInsertionReturn(std_string_result, ft_string_result); */
+	compareInsertionReturn(std_char_result, ft_char_result);
+	compareInsertionReturn(std_string_result, ft_string_result);
 
 	std_char_result = std_char_map.insert(std::make_pair(42, 'x'));
 	ft_char_result = ft_char_map.insert(ft::make_pair(42, 'x'));
 	std_string_result = std_string_map.insert(std::make_pair(42, "x"));
 	ft_string_result = ft_string_map.insert(ft::make_pair(42, "x"));
 
-	/* compareInsertionReturn(std_char_result, ft_char_result); */
-	/* compareInsertionReturn(std_string_result, ft_string_result); */
+	compareInsertionReturn(std_char_result, ft_char_result);
+	compareInsertionReturn(std_string_result, ft_string_result);
 
-	/* compareContent(std_char_map, ft_char_map); */
-	/* compareContent(std_string_map, ft_string_map); */
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
 }
 
-/* IGNORE_TEST(MapModifiers, MapSquareBracketOperator) */
-/* { */
-/* 	CHECK_EQUAL(std_char_map[5], ft_char_map[5]); */
-/* 	CHECK_EQUAL(std_string_map[5], ft_string_map[5]); */
-/* } */
+TEST(MapModifiers, MapSquareBracketOperator)
+{
+	CHECK_EQUAL(std_char_map[5], ft_char_map[5]);
+	CHECK_EQUAL(std_string_map[5], ft_string_map[5]);
+
+	CHECK_EQUAL(std_char_map[42], ft_char_map[42]);
+	CHECK_EQUAL(std_string_map[42], ft_string_map[42]);
+
+	std_char_map[43] = 'w';
+	ft_char_map[43] = 'w';
+	std_string_map[43] = "w";
+	ft_string_map[43] = "w";
+
+	std_char_map[6] = 'u';
+	ft_char_map[6] = 'u';
+	std_string_map[6] = "u";
+	ft_string_map[6] = "u";
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+}
+
+TEST(MapModifiers, MapAt)
+{
+	CHECK_EQUAL(std_char_map.at(5), ft_char_map.at(5));
+	CHECK_EQUAL(std_string_map.at(5), ft_string_map.at(5));
+
+	try
+	{
+		ft_char_map.at(42);
+	}
+	catch ( std::out_of_range &e )
+	{
+		CHECK(true);
+	}
+	catch ( std::exception &e )
+	{
+		FAIL("out of range at must throw out_of_range exception");
+	}
+	try
+	{
+		ft_string_map.at(42);
+	}
+	catch ( std::out_of_range &e )
+	{
+		CHECK(true);
+	}
+	catch ( std::exception &e )
+	{
+		FAIL("out of range at must throw out_of_range exception");
+	}
+
+	std_char_map.at(6) = 'w';
+	ft_char_map.at(6) = 'w';
+	std_string_map.at(6) = "w";
+	ft_string_map.at(6) = "w";
+
+	compareContent(std_char_map, ft_char_map);
+	compareContent(std_string_map, ft_string_map);
+}

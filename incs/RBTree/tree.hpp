@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/11 17:21:17 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 09:27:10 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ public:
 	{
 		if (current_node->isNil() || current_node->getKey() == key)
 			return current_node;
-		if (_comparator(current_node->getKey(), key))
+		if (_comparator(key, current_node->getKey()))
 			return this->treeSearch(current_node->leftChild, key);
 		return this->treeSearch(current_node->rightChild, key);
 	}
@@ -236,6 +236,8 @@ private:
 			result = traversingTree;
 			if (_comparator(insertKey, traversingTree->getKey()))
 				traversingTree = traversingTree->leftChild;
+			else if (insertKey == traversingTree->getKey())
+				return result;
 			else
 				traversingTree = traversingTree->rightChild;
 		}

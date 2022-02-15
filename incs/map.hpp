@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/11 17:23:28 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 09:27:44 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,24 @@ public:
 		return *this;
 	}
 
-	/* mapped_type&	operator[]( const key_type& key ) */
-	/* { */
-	/* } */
+	mapped_type&	operator[]( const key_type& key )
+	{
+		return (*((this->insert(ft::make_pair(key, mapped_type()))).first)).second;
+	}
+	mapped_type&	at( const key_type& key )
+	{
+		if (this->alreadyExists(key))
+			throw std::out_of_range("key is out_of_range");
+		else
+			return (*this)[key];
+	}
+	const mapped_type&	at( const key_type& key) const
+	{
+		if (this->alreadyExists(key))
+			throw std::out_of_range("key is out_of_range");
+		else
+			return (*this)[key];
+	}
 
 	iterator	begin( void )
 	{
@@ -168,6 +183,11 @@ private:
 	tree_type		_rbTree;
 	key_compare		_comparator;
 	allocator_type	_valueAlloc;
+
+	bool	alreadyExists( const key_type& key ) const
+	{
+		return _rbTree.treeSearch(key)->isNil();
+	}
 
 };
 
