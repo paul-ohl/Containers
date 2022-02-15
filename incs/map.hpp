@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 18:05:34 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 18:50:18 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,33 @@ public:
 	typedef ft::map_reverse_iterator<const Key, T, Cmp, true>	const_reverse_iterator;
 
 	typedef tree<const Key, T, Cmp, Allocator>			tree_type;
+
+public:
+
+	class value_compare
+	{
+
+	public:
+
+		typedef bool		result_type;
+		typedef value_type	first_argument_type;
+		typedef value_type	second_argument_type;
+
+	public:
+
+		Cmp	comp;
+
+		value_compare( Cmp c = Cmp() ): comp(c) { return ; }
+
+	public:
+
+		bool operator()( const value_type& lhs, const value_type& rhs ) const
+		{
+			return comp(lhs.first, rhs.first);
+		}
+
+	};
+
 
 public:
 
@@ -138,7 +165,11 @@ public:
 	size_type	size( void ) const { return _rbTree.size(); }
 	size_type	max_size( void ) const { return _rbTree.max_size(); }
 
-	key_compare	key_comp( void ) const { return this->_comparator; }
+	key_compare		key_comp( void ) const { return this->_comparator; }
+	value_compare	value_comp() const
+	{
+		return value_compare(key_comp());
+	}
 
 	ft::pair<iterator, bool>	insert( const value_type& value )
 	{

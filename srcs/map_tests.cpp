@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:59:01 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 18:21:47 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 18:52:04 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -824,4 +824,21 @@ TEST(MapMiscellaneous, MapKeyComp)
 		  checkIteratorsEqual(stdit, ftit);
 		  stdit++;
 	  } while ( ftcomp((*ftit++).first, fthighest) );
+}
+
+TEST(MapMiscellaneous, MapValueComp)
+{
+	ft::map<char,int> mymap;
+
+	mymap['x']=1001;
+	mymap['y']=2002;
+	mymap['z']=3003;
+
+	ft::pair<char,int> highest = *mymap.rbegin();
+
+	ft::map<char,int>::iterator it = mymap.begin();
+	do {
+		it++;
+	} while ( mymap.value_comp()(*it, highest) );
+	CHECK(++it == mymap.end());
 }

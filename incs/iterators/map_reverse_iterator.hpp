@@ -6,7 +6,7 @@
 /*   By: paulohl <pohl@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 17:39:43 by paulohl           #+#    #+#             */
-/*   Updated: 2022/02/15 18:19:15 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/15 18:36:33 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,11 @@ public:
 
 	reference			operator*( void ) const
 	{
-		map_reverse_iterator	tmp(*this);
-
-		/* ++tmp; */
-		return tmp._node->getValue();
+		return (*this)._node->getValue();
 	}
 	pointer				operator->( void ) const
 	{
-		map_reverse_iterator	tmp(*this);
-
-		/* ++tmp; */
-		return &tmp._node->getValue();
+		return &(*this)._node->getValue();
 	}
 
 	map_reverse_iterator&	operator++( void )
