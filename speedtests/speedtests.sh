@@ -19,7 +19,7 @@ mkdir -p "$bin_folder"
 for file in $@; do
 	bin_suffix=${file%.cpp}
 	clang++ -Wall -Wextra -Werror -std=c++98 -D IS_STD=1 -o "$bin_folder/std_$bin_suffix" $file > /dev/null
-	clang++ -Wall -Wextra -Werror -std=c++98 -I../incs/ -o "$bin_folder/ft_$bin_suffix" $file > /dev/null
+	clang++ -Wall -Wextra -Werror -std=c++98 -I../incs/ -I../incs/iterators -I../incs/RBTree -I../incs/utils -o "$bin_folder/ft_$bin_suffix" $file > /dev/null
 	printf "[std]: "
 	time "./$bin_folder/std_$bin_suffix"
 	printf "[ft ]: "

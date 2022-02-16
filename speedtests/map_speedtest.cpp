@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 18:02:27 by pohl              #+#    #+#             */
-/*   Updated: 2022/01/31 18:04:15 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 17:04:12 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,27 @@
 #endif
 
 #if IS_STD == 1
-	#include <stack>
+	#include <map>
 	namespace ft = std;
 #else
-	#include "stack.hpp"
+	#include "map.hpp"
 #endif
 
 int main( void )
 {
-	std::cout << "HI " << IS_STD << std::endl;
+	ft::map<int, char>				testedMap;
+	ft::map<int, char>::iterator	it, ite;
+
+	size_t				numberOfPushes = 50000000;
+
+	for (size_t i = 0; i < numberOfPushes; i++)
+		testedMap.insert(ft::make_pair(numberOfPushes, 'a'));
+	it = testedMap.begin();
+	ite = testedMap.end();
+	while (it != ite)
+	{
+		it++;
+	}
+	testedMap.clear();
+	return 0;
 }
