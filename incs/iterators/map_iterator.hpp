@@ -6,7 +6,7 @@
 /*   By: paulohl <pohl@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 17:39:43 by paulohl           #+#    #+#             */
-/*   Updated: 2022/02/16 14:24:30 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 16:56:33 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define MAP_ITERATOR_HPP
 
 # include <iterator>
-# include "RBTree/node.hpp"
-# include "utils/select_const_type.hpp"
+# include "node.hpp"
+# include "select_const_type.hpp"
 
 namespace ft
 {
@@ -50,6 +50,11 @@ public:
 	{
 		return;
 	}
+	/* explicit map_iterator( const node *ptr, bool is_end = false ) : */
+	/* 	_node(ptr), _is_end(is_end) */
+	/* { */
+	/* 	return; */
+	/* } */
 	map_iterator( const map_iterator<const Key, T, Compare> &other ):
 		_node(other.getNode()), _is_end(other.isEnd())
 	{

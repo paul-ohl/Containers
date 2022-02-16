@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/16 15:02:24 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 16:56:10 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 #include <iostream>
 
 # include <fstream>
-# include "utils/pair.hpp"
-# include "RBTree/node.hpp"
+# include "pair.hpp"
+# include "node.hpp"
 
 namespace ft
 {
@@ -144,17 +144,19 @@ public:
 			y = toDelete->rightChild->getTreeMinimum();
 			yOriginalColor = y->color;
 			x = y->rightChild;
-			if (y->parent == toDelete)
+			if (y->parent == toDelete && !x->isNil())
 				x->parent = y;
 			else
 			{
 				transplant(y, y->rightChild);
 				y->rightChild = toDelete->rightChild;
-				y->rightChild->parent = y;
+				if (!y->rightChild->isNil())
+					y->rightChild->parent = y;
 			}
 			transplant(toDelete, y);
 			y->leftChild = toDelete->leftChild;
-			y->leftChild->parent = y;
+			if (!y->leftChild->isNil())
+				y->leftChild->parent = y;
 			y->color = toDelete->color;
 		}
 		if (yOriginalColor == BLACK)
@@ -175,11 +177,11 @@ public:
 			return this->findNode(current_node->leftChild, key);
 		return this->findNode(current_node->rightChild, key);
 	}
-	const node*	findNode( const key_type& key ) const
+	node*	findNode( const key_type& key ) const
 	{
 		return this->findNode(this->_root, key);
 	}
-	const node*	findNode( node* current_node, const key_type& key ) const
+	node*	findNode( node* current_node, const key_type& key ) const
 	{
 		if (current_node->isNil() || current_node->getKey() == key)
 			return current_node;
@@ -191,7 +193,7 @@ public:
 	{
 		return this->lower_bound(this->_root, key);
 	}
-	const node*	lower_bound( const key_type& key ) const
+	node*	lower_bound( const key_type& key ) const
 	{
 		return this->lower_bound(this->_root, key);
 	}
@@ -208,11 +210,24 @@ public:
 			return current_node;
 		return tmp;
 	}
+	node*	lower_bound( node* current_node, const key_type& key) const
+	{
+		node *tmp = this->nil;
+
+		if (current_node->isNil() || key == current_node->getKey())
+			return current_node;
+		if (_comparator(current_node->getKey(), key))
+			return lower_bound(current_node->rightChild, key);
+		tmp = lower_bound(current_node->leftChild, key);
+		if (tmp->isNil())
+			return current_node;
+		return tmp;
+	}
 	node*	upper_bound( const key_type& key )
 	{
 		return this->upper_bound(this->_root, key);
 	}
-	const node*	upper_bound( const key_type& key ) const
+	node*	upper_bound( const key_type& key ) const
 	{
 		return this->upper_bound(this->_root, key);
 	}
@@ -229,11 +244,24 @@ public:
 			return current_node;
 		return tmp;
 	}
+	node*	upper_bound( node* current_node, const key_type& key) const
+	{
+		node *tmp = this->nil;
+
+		if (current_node->isNil())
+			return current_node;
+		if (_comparator(current_node->getKey(), key) || current_node->getKey() == key)
+			return upper_bound(current_node->rightChild, key);
+		tmp = upper_bound(current_node->leftChild, key);
+		if (tmp->isNil())
+			return current_node;
+		return tmp;
+	}
 	node*	treeMinimum( void )
 	{
 		return this->_root->getTreeMinimum();
 	}
-	const node*	treeMinimum( void ) const
+	node*	treeMinimum( void ) const
 	{
 		return this->_root->getTreeMinimum();
 	}
@@ -241,7 +269,7 @@ public:
 	{
 		return this->_root->getTreeMaximum();
 	}
-	const node*	treeMaximum( void ) const
+	node*	treeMaximum( void ) const
 	{
 		return this->_root->getTreeMaximum();
 	}

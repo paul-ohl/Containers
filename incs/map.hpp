@@ -6,16 +6,16 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/16 15:18:51 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 16:54:38 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_HPP
 # define MAP_HPP
 
-# include "RBTree/tree.hpp"
-# include "iterators/map_iterator.hpp"
-# include "iterators/map_reverse_iterator.hpp"
+# include "tree.hpp"
+# include "map_iterator.hpp"
+# include "map_reverse_iterator.hpp"
 
 namespace ft
 {
@@ -130,35 +130,35 @@ public:
 
 	iterator	begin( void )
 	{
-		return iterator(this->_rbTree.treeMinimum());
+		return iterator(this->_rbTree.treeMinimum(), (_rbTree.size() == 0));
 	}
-	const_iterator	begin( void ) const
+	iterator	begin( void ) const
 	{
-		return const_iterator(this->_rbTree.treeMinimum());
+		return iterator(this->_rbTree.treeMinimum(), (_rbTree.size() == 0));
 	}
 	iterator	end( void )
 	{
 		return iterator(this->_rbTree.treeMaximum(), true);
 	}
-	const_iterator	end( void ) const
+	iterator	end( void ) const
 	{
-		return const_iterator(this->_rbTree.treeMaximum(), true);
+		return iterator(this->_rbTree.treeMaximum(), true);
 	}
 	reverse_iterator	rbegin( void )
 	{
-		return reverse_iterator(this->_rbTree.treeMaximum(), false);
+		return reverse_iterator(this->_rbTree.treeMaximum(), (_rbTree.size() == 0));
 	}
-	const_reverse_iterator	rbegin( void ) const
+	reverse_iterator	rbegin( void ) const
 	{
-		return const_reverse_iterator(this->_rbTree.treeMaximum(), false);
+		return reverse_iterator(this->_rbTree.treeMaximum(), (_rbTree.size() == 0));
 	}
 	reverse_iterator	rend( void )
 	{
 		return reverse_iterator(this->_rbTree.treeMinimum(), true);
 	}
-	const_reverse_iterator	rend( void ) const
+	reverse_iterator	rend( void ) const
 	{
-		return const_reverse_iterator(this->_rbTree.treeMinimum(), true);
+		return reverse_iterator(this->_rbTree.treeMinimum(), true);
 	}
 
 	bool		empty( void ) const { return _rbTree.size() == 0; }
@@ -182,7 +182,7 @@ public:
 	}
 	const_iterator	find( const key_type& key ) const
 	{
-		node<Key, T, Cmp, Allocator>	*result = _rbTree.findNode(key);
+		node<const Key, T, Cmp, Allocator>	*result = _rbTree.findNode(key);
 
 		if (result->isNil())
 			return this->end();
@@ -292,6 +292,63 @@ public:
 		this->_valueAlloc = tmp_valueAlloc;
 		this->_comparator = tmp_comparator;
 		this->_rbTree.swap(other._rbTree);
+	}
+
+	friend bool	operator==( const map &lhs, const map &rhs )
+	{
+		iterator	lhs_it = lhs.begin();
+		iterator	lhs_ite = lhs.end();
+		iterator	rhs_it = rhs.begin();
+		iterator	rhs_ite = rhs.end();
+
+		while (lhs_it != lhs_ite && rhs_it != rhs_ite)
+		{
+			if (lhs_it->second != rhs_it->second)
+				return false;
+			lhs_it++;
+			rhs_it++;
+		}
+		if (lhs_it != lhs_ite || rhs_it != rhs_ite)
+			return false;
+		return true;
+	}
+	friend bool	operator!=( const map &lhs, const map &rhs )
+	{
+		return !(lhs == rhs);
+	}
+	friend bool	operator<( const map &lhs, const map &rhs )
+	{
+		iterator	lhs_it = lhs.begin();
+		iterator	lhs_ite = lhs.end();
+		iterator	rhs_it = rhs.begin();
+		iterator	rhs_ite = rhs.end();
+
+		while (lhs_it != lhs_ite && rhs_it != rhs_ite)
+		{
+			if (lhs_it->second != rhs_it->second)
+				return lhs_it->second < rhs_it->second;
+			lhs_it++;
+			rhs_it++;
+		}
+		if (rhs_it == rhs_ite)
+			return false;
+		return true;
+	}
+	friend bool	operator>( const map &lhs, const map &rhs )
+	{
+		return rhs < lhs;
+	}
+	friend bool	operator<=( const map &lhs, const map &rhs )
+	{
+		return !(lhs > rhs);
+	}
+	friend bool	operator>=( const map &lhs, const map &rhs )
+	{
+		return !(lhs < rhs);
+	}
+	friend void	swap( map &rhs, map &lhs )
+	{
+		lhs.swap(rhs);
 	}
 
 	void	printTree( void ) const

@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:50 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/16 14:14:43 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 16:56:02 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <iostream>
 
 # include <stdexcept>
-# include "utils/pair.hpp"
+# include "pair.hpp"
 
 # define RED 0
 # define BLACK 1
@@ -111,9 +111,9 @@ public:
 		}
 		return treeMinimum;
 	}
-	const node*	getTreeMinimum( void ) const
+	node*	getTreeMinimum( void ) const
 	{
-		const node*	treeMinimum = this;
+		node*	treeMinimum = this;
 
 		while (!treeMinimum->leftChild->isNil())
 			treeMinimum = treeMinimum->leftChild;
@@ -127,9 +127,9 @@ public:
 			treeMaximum = treeMaximum->rightChild;
 		return treeMaximum;
 	}
-	const node*	getTreeMaximum( void ) const
+	node*	getTreeMaximum( void ) const
 	{
-		const node*	treeMaximum = this;
+		node*	treeMaximum = this;
 
 		while (!treeMaximum->rightChild->isNil())
 			treeMaximum = treeMaximum->rightChild;
@@ -151,9 +151,9 @@ public:
 		}
 		return tmp;
 	}
-	const node*	getTreeSuccessor( const node *currentNode = NULL ) const
+	node*	getTreeSuccessor( const node *currentNode = NULL ) const
 	{
-		const node*	tmp;
+		node*	tmp;
 
 		if (currentNode == NULL)
 			currentNode = this;
@@ -183,9 +183,9 @@ public:
 		}
 		return tmp;
 	}
-	const node*	getTreePredecessor( const node *currentNode = NULL ) const
+	node*	getTreePredecessor( const node *currentNode = NULL ) const
 	{
-		const node*	tmp;
+		node*	tmp;
 
 		if (currentNode == NULL)
 			currentNode = this;

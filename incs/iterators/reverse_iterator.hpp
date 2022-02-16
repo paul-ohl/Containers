@@ -6,14 +6,14 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/03 17:41:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/07 15:08:32 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 16:56:33 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REVERSE_ITERATOR_HPP
 # define REVERSE_ITERATOR_HPP
 
-# include "utils/iterator_traits.hpp"
+# include "iterator_traits.hpp"
 
 namespace ft
 {

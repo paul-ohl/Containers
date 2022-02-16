@@ -3,7 +3,7 @@ S		= srcs/
 # Object files directory
 O		= objs/
 # Include files directory
-I		= incs/
+I		= incs/ incs/iterators incs/RBTree incs/utils
 # Dependency files directory
 D		= deps/
 

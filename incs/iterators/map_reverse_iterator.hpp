@@ -6,14 +6,14 @@
 /*   By: paulohl <pohl@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 17:39:43 by paulohl           #+#    #+#             */
-/*   Updated: 2022/02/15 18:36:33 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 16:56:33 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MAP_REVERSE_ITERATOR_HPP
 # define MAP_REVERSE_ITERATOR_HPP
 
-# include "iterators/map_iterator.hpp"
+# include "map_iterator.hpp"
 
 namespace ft
 {
@@ -56,7 +56,7 @@ public:
 		return;
 	}
 	map_reverse_iterator( const map_reverse_iterator<const Key, T, Compare> &other ):
-		_node(other.getNode()), _is_end(other._is_end)
+		_node(other.getNode()), _is_end(other.isEnd())
 	{
 		return;
 	}
