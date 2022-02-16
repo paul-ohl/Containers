@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 18:50:18 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 15:18:51 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,70 @@ public:
 	value_compare	value_comp() const
 	{
 		return value_compare(key_comp());
+	}
+	allocator_type	get_allocator( void ) const { return this->_valueAlloc; }
+
+	iterator		find( const key_type& key )
+	{
+		node<const Key, T, Cmp, Allocator>	*result = _rbTree.findNode(key);
+
+		if (result->isNil())
+			return this->end();
+		return iterator(result);
+	}
+	const_iterator	find( const key_type& key ) const
+	{
+		node<Key, T, Cmp, Allocator>	*result = _rbTree.findNode(key);
+
+		if (result->isNil())
+			return this->end();
+		return const_iterator(result);
+	}
+	size_type	count( const key_type& key ) const
+	{
+		if (_rbTree.findNode(key)->isNil())
+			return 0;
+		return 1;
+	}
+	iterator		lower_bound( const key_type& key )
+	{
+		node<const Key, T, Cmp, Allocator>	*result = _rbTree.lower_bound(key);
+
+		if (result->isNil())
+			return this->end();
+		return iterator(result);
+	}
+	const_iterator		lower_bound( const key_type& key ) const
+	{
+		node<const Key, T, Cmp, Allocator>	*result = _rbTree.lower_bound(key);
+
+		if (result->isNil())
+			return this->end();
+		return const_iterator(result);
+	}
+	iterator		upper_bound( const key_type& key )
+	{
+		node<const Key, T, Cmp, Allocator>	*result = _rbTree.upper_bound(key);
+
+		if (result->isNil())
+			return this->end();
+		return iterator(result);
+	}
+	const_iterator		upper_bound( const key_type& key ) const
+	{
+		node<const Key, T, Cmp, Allocator>	*result = _rbTree.upper_bound(key);
+
+		if (result->isNil())
+			return this->end();
+		return const_iterator(result);
+	}
+	ft::pair<iterator, iterator>	equal_range( const key_type& key )
+	{
+		return ft::make_pair(this->lower_bound(key), this->upper_bound(key));
+	}
+	ft::pair<const_iterator, const_iterator>	equal_range( const key_type& key ) const
+	{
+		return ft::make_pair(this->lower_bound(key), this->upper_bound(key));
 	}
 
 	ft::pair<iterator, bool>	insert( const value_type& value )

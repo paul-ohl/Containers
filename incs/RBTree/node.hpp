@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:50 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 15:41:37 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 14:14:43 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,66 +135,66 @@ public:
 			treeMaximum = treeMaximum->rightChild;
 		return treeMaximum;
 	}
-	node*	getTreeSuccessor( const node *current_node = NULL )
+	node*	getTreeSuccessor( const node *currentNode = NULL )
 	{
 		node*	tmp;
 
-		if (current_node == NULL)
-			current_node = this;
-		if (!current_node->rightChild->isNil())
-			return current_node->rightChild->getTreeMinimum();
-		tmp = current_node->parent;
-		while ((!tmp->isNil()) && current_node == tmp->rightChild)
+		if (currentNode == NULL)
+			currentNode = this;
+		if (!currentNode->rightChild->isNil())
+			return currentNode->rightChild->getTreeMinimum();
+		tmp = currentNode->parent;
+		while ((!tmp->isNil()) && currentNode == tmp->rightChild)
 		{
-			current_node = tmp;
+			currentNode = tmp;
 			tmp = tmp->parent;
 		}
 		return tmp;
 	}
-	const node*	getTreeSuccessor( const node *current_node = NULL ) const
+	const node*	getTreeSuccessor( const node *currentNode = NULL ) const
 	{
 		const node*	tmp;
 
-		if (current_node == NULL)
-			current_node = this;
-		if (!current_node->rightChild->isNil())
-			return current_node->rightChild->getTreeMinimum();
-		tmp = current_node->parent;
-		while ((!tmp->isNil()) && current_node == tmp->rightChild)
+		if (currentNode == NULL)
+			currentNode = this;
+		if (!currentNode->rightChild->isNil())
+			return currentNode->rightChild->getTreeMinimum();
+		tmp = currentNode->parent;
+		while ((!tmp->isNil()) && currentNode == tmp->rightChild)
 		{
-			current_node = tmp;
+			currentNode = tmp;
 			tmp = tmp->parent;
 		}
 		return tmp;
 	}
-	node*	getTreePredecessor( const node *current_node = NULL )
+	node*	getTreePredecessor( const node *currentNode = NULL )
 	{
 		node*	tmp;
 
-		if (current_node == NULL)
-			current_node = this;
-		if (!current_node->leftChild->isNil())
-			return current_node->leftChild->getTreeMaximum();
-		tmp = current_node->parent;
-		while ((!tmp->isNil()) && current_node == tmp->leftChild)
+		if (currentNode == NULL)
+			currentNode = this;
+		if (!currentNode->leftChild->isNil())
+			return currentNode->leftChild->getTreeMaximum();
+		tmp = currentNode->parent;
+		while ((!tmp->isNil()) && currentNode == tmp->leftChild)
 		{
-			current_node = tmp;
+			currentNode = tmp;
 			tmp = tmp->parent;
 		}
 		return tmp;
 	}
-	const node*	getTreePredecessor( const node *current_node = NULL ) const
+	const node*	getTreePredecessor( const node *currentNode = NULL ) const
 	{
 		const node*	tmp;
 
-		if (current_node == NULL)
-			current_node = this;
-		if (!current_node->leftChild->isNil())
-			return current_node->leftChild->getTreeMaximum();
-		tmp = current_node->parent;
-		while ((!tmp->isNil()) && current_node == tmp->leftChild)
+		if (currentNode == NULL)
+			currentNode = this;
+		if (!currentNode->leftChild->isNil())
+			return currentNode->leftChild->getTreeMaximum();
+		tmp = currentNode->parent;
+		while ((!tmp->isNil()) && currentNode == tmp->leftChild)
 		{
-			current_node = tmp;
+			currentNode = tmp;
 			tmp = tmp->parent;
 		}
 		return tmp;

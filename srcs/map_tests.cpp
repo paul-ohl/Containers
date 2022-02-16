@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:59:01 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 18:52:04 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 15:22:41 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "CppUTest/UtestMacros.h"
 
 template< typename StdIt, typename FtIt >
-void	checkIteratorsEqual( StdIt stdIt, FtIt ftIt, bool print = false )
+void	compareIterators( StdIt stdIt, FtIt ftIt, bool print = false )
 {
 		if (print)
 			std::cout << stdIt->first << ", " << stdIt->second << " | "
@@ -49,7 +49,7 @@ void	compareContent( StdMap& stdMap, FtMap& ftMap, bool print = false )
 		CHECK_EQUAL_TEXT(stdMap.max_size() , ftMap.max_size(), "Max Size");
 	}
 	while (std_begin != std_end)
-		checkIteratorsEqual(std_begin++, ft_begin++, print);
+		compareIterators(std_begin++, ft_begin++, print);
 }
 
 TEST_GROUP(MapMemberFunctions)
@@ -248,33 +248,33 @@ TEST(MapIterators, Arithmetics)
 	ft_string_map_it = ft_string_map.begin();
 	ft_string_map_ite = ft_string_map.end();
 
-	checkIteratorsEqual(std_char_map_it, ft_char_map_it);
-	checkIteratorsEqual(std_string_map_it, ft_string_map_it);
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
 
 	std_char_map_it++;
 	ft_char_map_it++;
 	std_string_map_it++;
 	ft_string_map_it++;
 
-	checkIteratorsEqual(std_char_map_it, ft_char_map_it);
-	checkIteratorsEqual(std_string_map_it, ft_string_map_it);
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
 
 	std_char_map_it--;
 	ft_char_map_it--;
 	std_string_map_it--;
 	ft_string_map_it--;
 
-	checkIteratorsEqual(std_char_map_it, ft_char_map_it);
-	checkIteratorsEqual(std_string_map_it, ft_string_map_it);
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
 
-	checkIteratorsEqual(std_char_map_it++, ft_char_map_it++);
-	checkIteratorsEqual(std_string_map_it++, ft_string_map_it++);
-	checkIteratorsEqual(++std_char_map_it, ++ft_char_map_it);
-	checkIteratorsEqual(++std_string_map_it, ++ft_string_map_it);
-	checkIteratorsEqual(std_char_map_it--, ft_char_map_it--);
-	checkIteratorsEqual(std_string_map_it--, ft_string_map_it--);
-	checkIteratorsEqual(--std_char_map_it, --ft_char_map_it);
-	checkIteratorsEqual(--std_string_map_it, --ft_string_map_it);
+	compareIterators(std_char_map_it++, ft_char_map_it++);
+	compareIterators(std_string_map_it++, ft_string_map_it++);
+	compareIterators(++std_char_map_it, ++ft_char_map_it);
+	compareIterators(++std_string_map_it, ++ft_string_map_it);
+	compareIterators(std_char_map_it--, ft_char_map_it--);
+	compareIterators(std_string_map_it--, ft_string_map_it--);
+	compareIterators(--std_char_map_it, --ft_char_map_it);
+	compareIterators(--std_string_map_it, --ft_string_map_it);
 
 	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
 	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
@@ -356,33 +356,33 @@ TEST(MapReverseIterators, Arithmetics)
 	ft_string_map_it = ft_string_map.rbegin();
 	ft_string_map_ite = ft_string_map.rend();
 
-	checkIteratorsEqual(std_char_map_it, ft_char_map_it);
-	checkIteratorsEqual(std_string_map_it, ft_string_map_it);
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
 
 	std_char_map_it++;
 	ft_char_map_it++;
 	std_string_map_it++;
 	ft_string_map_it++;
 
-	checkIteratorsEqual(std_char_map_it, ft_char_map_it);
-	checkIteratorsEqual(std_string_map_it, ft_string_map_it);
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
 
 	std_char_map_it--;
 	ft_char_map_it--;
 	std_string_map_it--;
 	ft_string_map_it--;
 
-	checkIteratorsEqual(std_char_map_it, ft_char_map_it);
-	checkIteratorsEqual(std_string_map_it, ft_string_map_it);
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
 
-	checkIteratorsEqual(std_char_map_it++, ft_char_map_it++);
-	checkIteratorsEqual(std_string_map_it++, ft_string_map_it++);
-	checkIteratorsEqual(++std_char_map_it, ++ft_char_map_it);
-	checkIteratorsEqual(++std_string_map_it, ++ft_string_map_it);
-	checkIteratorsEqual(std_char_map_it--, ft_char_map_it--);
-	checkIteratorsEqual(std_string_map_it--, ft_string_map_it--);
-	checkIteratorsEqual(--std_char_map_it, --ft_char_map_it);
-	checkIteratorsEqual(--std_string_map_it, --ft_string_map_it);
+	compareIterators(std_char_map_it++, ft_char_map_it++);
+	compareIterators(std_string_map_it++, ft_string_map_it++);
+	compareIterators(++std_char_map_it, ++ft_char_map_it);
+	compareIterators(++std_string_map_it, ++ft_string_map_it);
+	compareIterators(std_char_map_it--, ft_char_map_it--);
+	compareIterators(std_string_map_it--, ft_string_map_it--);
+	compareIterators(--std_char_map_it, --ft_char_map_it);
+	compareIterators(--std_string_map_it, --ft_string_map_it);
 
 	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
 	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
@@ -406,11 +406,11 @@ TEST(MapReverseIterators, Base)
 	std_string_map_it++;
 	ft_string_map_it++;
 
-	checkIteratorsEqual(std_char_map_it.base(), ft_char_map_it.base());
-	checkIteratorsEqual(std_string_map_it.base(), ft_string_map_it.base());
+	compareIterators(std_char_map_it.base(), ft_char_map_it.base());
+	compareIterators(std_string_map_it.base(), ft_string_map_it.base());
 
-	checkIteratorsEqual(std_char_map_ite.base(), ft_char_map_ite.base());
-	checkIteratorsEqual(std_string_map_ite.base(), ft_string_map_ite.base());
+	compareIterators(std_char_map_ite.base(), ft_char_map_ite.base());
+	compareIterators(std_string_map_ite.base(), ft_string_map_ite.base());
 }
 
 TEST_GROUP(MapCapacity)
@@ -557,7 +557,7 @@ template< typename StdIt, typename FtIt >
 void	compareInsertionReturn( std::pair<StdIt, bool> std_res,  ft::pair<FtIt, bool> ft_res )
 {
 	CHECK_EQUAL(std_res.second, ft_res.second);
-	checkIteratorsEqual(std_res.first, ft_res.first, false);
+	compareIterators(std_res.first, ft_res.first, false);
 }
 
 TEST(MapModifiers, MapBasicInsertion)
@@ -761,7 +761,6 @@ TEST(MapModifiers, MapSwap)
 	other_ft_string_map.insert(ft::make_pair(12, "zxcv"));
 	other_ft_string_map.insert(ft::make_pair(12, "hjkl"));
 	other_ft_string_map.insert(ft::make_pair(13, "yuio"));
-	other_ft_string_map.printTree();
 
 	compareContent(std_char_map, ft_char_map);
 	compareContent(std_string_map, ft_string_map);
@@ -821,7 +820,7 @@ TEST(MapMiscellaneous, MapKeyComp)
 	  std::map<char,int>::iterator stdit = stdmap.begin();
 	  ft::map<char,int>::iterator ftit = ftmap.begin();
 	  do {
-		  checkIteratorsEqual(stdit, ftit);
+		  compareIterators(stdit, ftit);
 		  stdit++;
 	  } while ( ftcomp((*ftit++).first, fthighest) );
 }
@@ -841,4 +840,237 @@ TEST(MapMiscellaneous, MapValueComp)
 		it++;
 	} while ( mymap.value_comp()(*it, highest) );
 	CHECK(++it == mymap.end());
+}
+
+TEST(MapMiscellaneous, MapGetAllocator)
+{
+	ft::map<char,int>	ftmap;
+
+	ft::map<char, int>::allocator_type ft_allocator = ftmap.get_allocator();
+}
+
+TEST_GROUP(MapOperations)
+{
+	std::list<ft::pair<const int, char> >			ft_list_char;
+	std::list<ft::pair<const int, std::string> >	ft_list_string;
+	std::list<std::pair<int, char> >		std_list_char;
+	std::list<std::pair<int, std::string> >	std_list_string;
+
+	std::map<int, char>			std_char_map;
+	ft::map<int, char>			ft_char_map;
+	std::map<int, std::string>	std_string_map;
+	ft::map<int, std::string>	ft_string_map;
+
+	std::map<int, char>::iterator			std_char_map_it, std_char_map_ite;
+	ft::map<int, char>::iterator			ft_char_map_it, ft_char_map_ite;
+	std::map<int, std::string>::iterator	std_string_map_it, std_string_map_ite;
+	ft::map<int, std::string>::iterator		ft_string_map_it, ft_string_map_ite;
+
+	void setup()
+	{
+		ft_list_char.push_back(ft::make_pair(1, 'a'));
+		ft_list_char.push_back(ft::make_pair(2, 'b'));
+		ft_list_char.push_back(ft::make_pair(3, 'c'));
+		ft_list_char.push_back(ft::make_pair(4, 'd'));
+		ft_list_char.push_back(ft::make_pair(5, 'e'));
+		ft_list_char.push_back(ft::make_pair(6, 'f'));
+		ft_list_char.push_back(ft::make_pair(7, 'g'));
+		ft_list_char.push_back(ft::make_pair(8, 'h'));
+		ft_list_char.push_back(ft::make_pair(9, 'i'));
+		ft_list_string.push_back(ft::make_pair(1, "Bonjour"));
+		ft_list_string.push_back(ft::make_pair(2, "Hello"));
+		ft_list_string.push_back(ft::make_pair(3, "Guten Tag"));
+		ft_list_string.push_back(ft::make_pair(4, "Hola"));
+		ft_list_string.push_back(ft::make_pair(5, "Buongiorno???"));
+		ft_list_string.push_back(ft::make_pair(6, "Fuck"));
+		ft_list_string.push_back(ft::make_pair(7, "I'm not great"));
+		ft_list_string.push_back(ft::make_pair(8, "with languages"));
+		ft_list_string.push_back(ft::make_pair(9, "after all"));
+		std_list_char.push_back(std::make_pair(1, 'a'));
+		std_list_char.push_back(std::make_pair(2, 'b'));
+		std_list_char.push_back(std::make_pair(3, 'c'));
+		std_list_char.push_back(std::make_pair(4, 'd'));
+		std_list_char.push_back(std::make_pair(5, 'e'));
+		std_list_char.push_back(std::make_pair(6, 'f'));
+		std_list_char.push_back(std::make_pair(7, 'g'));
+		std_list_char.push_back(std::make_pair(8, 'h'));
+		std_list_char.push_back(std::make_pair(9, 'i'));
+		std_list_string.push_back(std::make_pair(1, "Bonjour"));
+		std_list_string.push_back(std::make_pair(2, "Hello"));
+		std_list_string.push_back(std::make_pair(3, "Guten Tag"));
+		std_list_string.push_back(std::make_pair(4, "Hola"));
+		std_list_string.push_back(std::make_pair(5, "Buongiorno???"));
+		std_list_string.push_back(std::make_pair(6, "Fuck"));
+		std_list_string.push_back(std::make_pair(7, "I'm not great"));
+		std_list_string.push_back(std::make_pair(8, "with languages"));
+		std_list_string.push_back(std::make_pair(9, "after all"));
+		std_char_map.insert(std_list_char.begin(), std_list_char.end());
+		ft_char_map.insert(ft_list_char.begin(), ft_list_char.end());
+		std_string_map.insert(std_list_string.begin(), std_list_string.end());
+		ft_string_map.insert(ft_list_string.begin(), ft_list_string.end());
+		std_char_map_ite = std_char_map.end();
+		ft_char_map_ite = ft_char_map.end();
+		std_string_map_ite = std_string_map.end();
+		ft_string_map_ite = ft_string_map.end();
+	}
+};
+
+TEST(MapOperations, MapFind)
+{
+	std_char_map_it = std_char_map.find(3);
+	ft_char_map_it = ft_char_map.find(3);
+	std_string_map_it = std_string_map.find(3);
+	ft_string_map_it = ft_string_map.find(3);
+
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
+	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
+	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
+
+	std_char_map_it = std_char_map.find(42);
+	ft_char_map_it = ft_char_map.find(42);
+	std_string_map_it = std_string_map.find(42);
+	ft_string_map_it = ft_string_map.find(42);
+
+	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
+	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
+
+	std::map<int, char>::const_iterator	const_std_char_map_it = std_char_map.find(3);
+	ft::map<int, char>::const_iterator	const_ft_char_map_it = ft_char_map.find(3);
+	std::map<int, std::string>::const_iterator	const_std_string_map_it = std_string_map.find(3);
+	ft::map<int, std::string>::const_iterator	const_ft_string_map_it = ft_string_map.find(3);
+
+	compareIterators(const_std_char_map_it, const_ft_char_map_it);
+	compareIterators(const_std_string_map_it, const_ft_string_map_it);
+}
+
+TEST(MapOperations, MapCount)
+{
+	CHECK_EQUAL(std_char_map.count(3), ft_char_map.count(3));
+	CHECK_EQUAL(std_string_map.count(3), ft_string_map.count(3));
+	CHECK_EQUAL(std_char_map.count(42), ft_char_map.count(42));
+	CHECK_EQUAL(std_string_map.count(42), ft_string_map.count(42));
+}
+
+TEST(MapOperations, MapLowerBound)
+{
+	std_char_map_it = std_char_map.lower_bound(3);
+	ft_char_map_it = ft_char_map.lower_bound(3);
+	std_string_map_it = std_string_map.lower_bound(3);
+	ft_string_map_it = ft_string_map.lower_bound(3);
+
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
+	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
+	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
+
+	std_char_map.erase(3);
+	ft_char_map.erase(3);
+	std_string_map.erase(3);
+	ft_string_map.erase(3);
+
+	std_char_map_it = std_char_map.lower_bound(3);
+	ft_char_map_it = ft_char_map.lower_bound(3);
+	std_string_map_it = std_string_map.lower_bound(3);
+	ft_string_map_it = ft_string_map.lower_bound(3);
+
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
+	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
+	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
+
+	std_char_map_it = std_char_map.lower_bound(42);
+	ft_char_map_it = ft_char_map.lower_bound(42);
+	std_string_map_it = std_string_map.lower_bound(42);
+	ft_string_map_it = ft_string_map.lower_bound(42);
+
+	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
+	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
+}
+
+TEST(MapOperations, MapUpperBound)
+{
+	std_char_map_it = std_char_map.upper_bound(3);
+	ft_char_map_it = ft_char_map.upper_bound(3);
+	std_string_map_it = std_string_map.upper_bound(3);
+	ft_string_map_it = ft_string_map.upper_bound(3);
+
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
+	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
+	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
+
+	std_char_map.erase(3);
+	ft_char_map.erase(3);
+	std_string_map.erase(3);
+	ft_string_map.erase(3);
+
+	std_char_map_it = std_char_map.upper_bound(3);
+	ft_char_map_it = ft_char_map.upper_bound(3);
+	std_string_map_it = std_string_map.upper_bound(3);
+	ft_string_map_it = ft_string_map.upper_bound(3);
+
+	compareIterators(std_char_map_it, ft_char_map_it);
+	compareIterators(std_string_map_it, ft_string_map_it);
+	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
+	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
+
+	std_char_map_it = std_char_map.upper_bound(42);
+	ft_char_map_it = ft_char_map.upper_bound(42);
+	std_string_map_it = std_string_map.upper_bound(42);
+	ft_string_map_it = ft_string_map.upper_bound(42);
+
+	CHECK_EQUAL((std_char_map_it == std_char_map_ite), (ft_char_map_it == ft_char_map_ite));
+	CHECK_EQUAL((std_string_map_it == std_string_map_ite), (ft_string_map_it == ft_string_map_ite));
+}
+
+TEST(MapOperations, MapEqualRange)
+{
+	std::pair< std::map<int, char>::iterator, std::map<int, char>::iterator > std_char_range;
+	ft::pair< ft::map<int, char>::iterator, ft::map<int, char>::iterator > ft_char_range;
+	std::pair< std::map<int, std::string>::iterator, std::map<int, std::string>::iterator > std_string_range;
+	ft::pair< ft::map<int, std::string>::iterator, ft::map<int, std::string>::iterator > ft_string_range;
+
+	std_char_range = std_char_map.equal_range(3);
+	ft_char_range = ft_char_map.equal_range(3);
+	std_string_range = std_string_map.equal_range(3);
+	ft_string_range = ft_string_map.equal_range(3);
+
+	compareIterators(std_char_range.first, ft_char_range.first);
+	compareIterators(std_string_range.first, ft_string_range.first);
+	compareIterators(std_char_range.second, ft_char_range.second);
+	compareIterators(std_string_range.second, ft_string_range.second);
+	CHECK_EQUAL((std_char_range.first == std_char_map_ite), (ft_char_range.first == ft_char_map_ite));
+	CHECK_EQUAL((std_string_range.first == std_string_map_ite), (ft_string_range.first == ft_string_map_ite));
+	CHECK_EQUAL((std_char_range.second == std_char_map_ite), (ft_char_range.second == ft_char_map_ite));
+	CHECK_EQUAL((std_string_range.second == std_string_map_ite), (ft_string_range.second == ft_string_map_ite));
+
+	std_char_map.erase(3);
+	ft_char_map.erase(3);
+	std_string_map.erase(3);
+	ft_string_map.erase(3);
+
+	std_char_range = std_char_map.equal_range(3);
+	ft_char_range = ft_char_map.equal_range(3);
+	std_string_range = std_string_map.equal_range(3);
+	ft_string_range = ft_string_map.equal_range(3);
+
+	compareIterators(std_char_range.first, ft_char_range.first);
+	compareIterators(std_string_range.first, ft_string_range.first);
+	compareIterators(std_char_range.second, ft_char_range.second);
+	compareIterators(std_string_range.second, ft_string_range.second);
+	CHECK_EQUAL((std_char_range.first == std_char_map_ite), (ft_char_range.first == ft_char_map_ite));
+	CHECK_EQUAL((std_string_range.first == std_string_map_ite), (ft_string_range.first == ft_string_map_ite));
+	CHECK_EQUAL((std_char_range.second == std_char_map_ite), (ft_char_range.second == ft_char_map_ite));
+	CHECK_EQUAL((std_string_range.second == std_string_map_ite), (ft_string_range.second == ft_string_map_ite));
+
+	std_char_range = std_char_map.equal_range(42);
+	ft_char_range = ft_char_map.equal_range(42);
+	std_string_range = std_string_map.equal_range(42);
+	ft_string_range = ft_string_map.equal_range(42);
+
+	CHECK_EQUAL((std_char_range.first == std_char_map_ite), (ft_char_range.first == ft_char_map_ite));
+	CHECK_EQUAL((std_string_range.first == std_string_map_ite), (ft_string_range.first == ft_string_map_ite));
+	CHECK_EQUAL((std_char_range.second == std_char_map_ite), (ft_char_range.second == ft_char_map_ite));
+	CHECK_EQUAL((std_string_range.second == std_string_map_ite), (ft_string_range.second == ft_string_map_ite));
 }

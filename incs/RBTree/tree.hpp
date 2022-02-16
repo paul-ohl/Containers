@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/15 17:03:43 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/16 15:02:24 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ class tree
 public:
 
 	typedef node<const Key, T, Cmp, Allocator>	node;
-	typedef Key								key_type;
-	typedef T								mapped_type;
-	typedef ft::pair<const Key, T>			value_type;
-	typedef std::size_t						size_type;
+	typedef Key									key_type;
+	typedef T									mapped_type;
+	typedef ft::pair<const Key, T>				value_type;
+	typedef std::size_t							size_type;
 
 	tree( void ):
 		_root(NULL), _size(0), _comparator(Cmp()), _valueAlloc(Allocator())
@@ -177,7 +177,7 @@ public:
 	}
 	const node*	findNode( const key_type& key ) const
 	{
-		return this->findNode( this->_root, key );
+		return this->findNode(this->_root, key);
 	}
 	const node*	findNode( node* current_node, const key_type& key ) const
 	{
@@ -186,6 +186,48 @@ public:
 		if (_comparator(key, current_node->getKey()))
 			return this->findNode(current_node->leftChild, key);
 		return this->findNode(current_node->rightChild, key);
+	}
+	node*	lower_bound( const key_type& key )
+	{
+		return this->lower_bound(this->_root, key);
+	}
+	const node*	lower_bound( const key_type& key ) const
+	{
+		return this->lower_bound(this->_root, key);
+	}
+	node*	lower_bound( node* current_node, const key_type& key)
+	{
+		node *tmp = this->nil;
+
+		if (current_node->isNil() || key == current_node->getKey())
+			return current_node;
+		if (_comparator(current_node->getKey(), key))
+			return lower_bound(current_node->rightChild, key);
+		tmp = lower_bound(current_node->leftChild, key);
+		if (tmp->isNil())
+			return current_node;
+		return tmp;
+	}
+	node*	upper_bound( const key_type& key )
+	{
+		return this->upper_bound(this->_root, key);
+	}
+	const node*	upper_bound( const key_type& key ) const
+	{
+		return this->upper_bound(this->_root, key);
+	}
+	node*	upper_bound( node* current_node, const key_type& key)
+	{
+		node *tmp = this->nil;
+
+		if (current_node->isNil())
+			return current_node;
+		if (_comparator(current_node->getKey(), key) || current_node->getKey() == key)
+			return upper_bound(current_node->rightChild, key);
+		tmp = upper_bound(current_node->leftChild, key);
+		if (tmp->isNil())
+			return current_node;
+		return tmp;
 	}
 	node*	treeMinimum( void )
 	{
