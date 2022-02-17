@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:59:01 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/17 10:39:55 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/17 11:30:54 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	compareContent( StdSet& stdSet, FtSet& ftSet, bool print = false )
 	else
 	{
 		CHECK_EQUAL_TEXT(stdSet.size(), ftSet.size(), "Size");
-		CHECK_EQUAL_TEXT(stdSet.max_size() , ftSet.max_size(), "Max Size");
 	}
 	while (std_begin != std_end)
 		compareIterators(std_begin++, ft_begin++, print);
@@ -789,14 +788,6 @@ TEST(SetOperations, SetFind)
 
 	CHECK_EQUAL((std_char_set_it == std_char_set_ite), (ft_char_set_it == ft_char_set_ite));
 	CHECK_EQUAL((std_string_set_it == std_string_set_ite), (ft_string_set_it == ft_string_set_ite));
-
-	std::set<char>::const_iterator			const_std_char_set_it = std_char_set.find('c');
-	ft::set<char>::const_iterator			const_ft_char_set_it = ft_char_set.find('c');
-	std::set<std::string>::const_iterator	const_std_string_set_it = std_string_set.find("Hello");
-	ft::set<std::string>::const_iterator	const_ft_string_set_it = ft_string_set.find("Hello");
-
-	compareIterators(const_std_char_set_it, const_ft_char_set_it);
-	compareIterators(const_std_string_set_it, const_ft_string_set_it);
 }
 
 TEST(SetOperations, SetCount)

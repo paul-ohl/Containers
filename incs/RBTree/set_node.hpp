@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:50 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/17 10:44:45 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/17 10:56:57 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ public:
 	}
 
 	value_type&			getValue( void ) { return value; }
-	value_type&	getValue( void ) const { return value; }
-	key_type&		getKey( void ) const { return value.first; }
+	value_type&			getValue( void ) const { return value; }
+	key_type&			getKey( void ) { return value; }
 	std::string			getColorAsString( void ) const
 	{
 		if (this->color == RED)

@@ -6,7 +6,7 @@
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/17 10:47:25 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/17 11:33:48 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,12 +195,8 @@ public:
 	}
 	iterator	insert( iterator position, value_type value )
 	{
-		bool placeholder = false;
-
-		if ((*position).first + 1 == value.first)
-			return this->_rbTree.insertValue(position.getNode(), value,
-					placeholder);
-		return this->_rbTree.insertValue(value, placeholder);
+		(void)position;
+		return this->insert(value).first;
 	}
 	template< typename InputIt >
 	void	insert( InputIt first, InputIt last )
