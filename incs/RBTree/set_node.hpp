@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   node.hpp                                           :+:      :+:    :+:   */
+/*   set_node.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:50 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/16 16:56:02 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/17 10:44:45 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <iostream>
 
 # include <stdexcept>
-# include "pair.hpp"
 
 # define RED 0
 # define BLACK 1
@@ -27,23 +26,21 @@
 namespace ft
 {
 
-template<typename Key, typename T, typename Compare = std::less<Key>,
-	typename Allocator = std::allocator<ft::pair<const Key, T> > >
+template<typename Key, typename Compare = std::less<Key>,
+	typename Allocator = std::allocator<Key> >
 class node
 {
 
 public:
 
-	typedef const Key						key_type;
-	typedef T								mapped_type;
-	typedef pair<const Key, T>				value_type;
-	typedef std::size_t						size_type;
+	typedef Key			key_type;
+	typedef Key			value_type;
+	typedef std::size_t	size_type;
 
 	node( void ):
 		parent(NULL), rightChild(NULL), leftChild(NULL), color(RED)
 	{
-		value.first = Key();
-		value.second = T();
+		value = Key();
 	}
 	node( value_type &value ):
 		parent(NULL), rightChild(NULL), leftChild(NULL), color(RED), value(value)
@@ -82,19 +79,17 @@ public:
 		throw std::invalid_argument("You can only use value LEFT (0) and RIGHT (1)");
 	}
 
-	value_type&		getValue( void ) { return value; }
-	const value_type&		getValue( void ) const { return value; }
-	const key_type&	getKey( void ) const { return value.first; }
-	mapped_type&	getMapped( void ) { return value.second; }
-	const mapped_type&	getMapped( void ) const { return value.second; }
-	std::string		getColorAsString( void ) const
+	value_type&			getValue( void ) { return value; }
+	value_type&	getValue( void ) const { return value; }
+	key_type&		getKey( void ) const { return value.first; }
+	std::string			getColorAsString( void ) const
 	{
 		if (this->color == RED)
 			return std::string("RED");
 		else
 			return std::string("BLACK");
 	}
-	char			getColorAsChar( void ) const
+	char				getColorAsChar( void ) const
 	{
 		return this->color;
 	}

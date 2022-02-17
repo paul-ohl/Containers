@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_iterator.hpp                                   :+:      :+:    :+:   */
+/*   set_iterator.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: paulohl <pohl@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/06 17:39:43 by paulohl           #+#    #+#             */
-/*   Updated: 2022/02/17 08:22:53 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/17 10:33:00 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAP_ITERATOR_HPP
-# define MAP_ITERATOR_HPP
+#ifndef SET_ITERATOR_HPP
+# define SET_ITERATOR_HPP
 
 # include <iterator>
-# include "map_node.hpp"
+# include "set_node.hpp"
 # include "select_const_type.hpp"
 
 namespace ft
 {
 
-template < typename Key, typename T, typename Compare = std::less<Key>,
+template < typename Key, typename Compare = std::less<Key>,
 		 bool IsConst = false >
-class map_iterator
+class set_iterator
 {
 
 public:
@@ -32,37 +32,32 @@ public:
 	typedef std::ptrdiff_t					difference_type;
 	typedef std::size_t						size_type;
 
-	typedef	const Key			key_type;
-	typedef	T					mapped_type;
-	typedef	pair<const Key, T>	value_type;
+	typedef	Key	key_type;
+	typedef	Key	value_type;
+
 	typedef typename ft::select_const_type<IsConst, value_type*, const value_type*>::type	pointer;
 	typedef typename ft::select_const_type<IsConst, value_type&, const value_type&>::type	reference;
 
 private:
 
-	typedef node<Key, T, Compare>			node;
+	typedef node<Key, Compare>			node;
 
 public:
 
 	// Member functions
-	map_iterator( node *ptr = NULL, bool is_end = false ) :
+	set_iterator( node *ptr = NULL, bool is_end = false ) :
 		_node(ptr), _is_end(is_end)
 	{
 		return;
 	}
-	/* explicit map_iterator( const node *ptr, bool is_end = false ) : */
-	/* 	_node(ptr), _is_end(is_end) */
-	/* { */
-	/* 	return; */
-	/* } */
-	map_iterator( const map_iterator<const Key, T, Compare> &other ):
+	set_iterator( const set_iterator<const Key, Compare> &other ):
 		_node(other.getNode()), _is_end(other.isEnd())
 	{
 		return;
 	}
-	~map_iterator( void ) { return; }
+	~set_iterator( void ) { return; }
 
-	map_iterator &operator=( const map_iterator<const Key, T, Compare> &other )
+	set_iterator &operator=( const set_iterator<const Key, Compare> &other )
 	{
 		this->_node = other._node;
 		this->_is_end = other._is_end;
@@ -75,7 +70,7 @@ public:
 	reference			operator*( void ) const { return this->_node->getValue(); }
 	pointer				operator->( void ) const { return &this->_node->getValue(); }
 
-	map_iterator&	operator++( void )
+	set_iterator&	operator++( void )
 	{
 		node *tmp = this->_node->getTreeSuccessor();
 		
@@ -85,7 +80,7 @@ public:
 			this->_node = tmp;
 		return *this;
 	}  
-	map_iterator&	operator--( void )
+	set_iterator&	operator--( void )
 	{
 		node *tmp = this->_node->getTreePredecessor();
 		
@@ -98,18 +93,18 @@ public:
 		return *this;
 
 	}  
-	map_iterator		operator++( int ) {
-		map_iterator tmp(*this);
+	set_iterator		operator++( int ) {
+		set_iterator tmp(*this);
 		++(*this);
 		return tmp;
 	}
-	map_iterator		operator--( int ) {
-		map_iterator tmp(*this);
+	set_iterator		operator--( int ) {
+		set_iterator tmp(*this);
 		--(*this);
 		return tmp;
 	}
 
-	friend bool	operator==( const map_iterator& lhs, const map_iterator& rhs )
+	friend bool	operator==( const set_iterator& lhs, const set_iterator& rhs )
 	{
 		if (lhs._is_end != rhs._is_end)
 			return false;
@@ -118,7 +113,7 @@ public:
 		else
 			return lhs._node == rhs._node;
 	}
-	friend bool	operator!=( const map_iterator& lhs, const map_iterator& rhs )
+	friend bool	operator!=( const set_iterator& lhs, const set_iterator& rhs )
 	{
 		if (lhs._is_end != rhs._is_end)
 			return true;

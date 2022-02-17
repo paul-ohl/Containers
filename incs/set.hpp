@@ -1,38 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.hpp                                            :+:      :+:    :+:   */
+/*   set.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 09:03:00 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/17 08:22:02 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/17 10:47:25 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MAP_HPP
-# define MAP_HPP
+#ifndef SET_HPP
+# define SET_HPP
 
-# include "map_tree.hpp"
-# include "map_iterator.hpp"
-# include "map_reverse_iterator.hpp"
+# include "set_tree.hpp"
+# include "set_iterator.hpp"
+# include "set_reverse_iterator.hpp"
 
 namespace ft
 {
 
-template< typename Key, typename T, typename Cmp = std::less<Key>,
-	typename Allocator = std::allocator<pair<const Key, T> > >
-class map
+template< typename Key, typename Cmp = std::less<Key>,
+	typename Allocator = std::allocator<Key> >
+class set
 {
 
 public:
 
 	typedef Key					key_type;
-	typedef T					mapped_type;
-	typedef pair<const Key, T>	value_type;
+	typedef Key					value_type;
 	typedef std::size_t			size_type;
 	typedef std::ptrdiff_t		difference_type;
 	typedef Cmp					key_compare;
+	typedef Cmp					value_compare;
 	typedef Allocator			allocator_type;
 
 	typedef typename Allocator::reference			reference;
@@ -40,66 +40,39 @@ public:
 	typedef typename Allocator::pointer				pointer;
 	typedef typename Allocator::const_pointer		const_pointer;
 
-	typedef map_iterator<const Key, T, Cmp>						iterator;
-	typedef map_iterator<const Key, T, Cmp, true>				const_iterator;
-	typedef ft::map_reverse_iterator<const Key, T, Cmp>			reverse_iterator;
-	typedef ft::map_reverse_iterator<const Key, T, Cmp, true>	const_reverse_iterator;
+	typedef set_iterator<Key, Cmp>						iterator;
+	typedef set_iterator<Key, Cmp, true>				const_iterator;
+	typedef ft::set_reverse_iterator<Key, Cmp>			reverse_iterator;
+	typedef ft::set_reverse_iterator<Key, Cmp, true>	const_reverse_iterator;
 
-	typedef tree<const Key, T, Cmp, Allocator>			tree_type;
-
-public:
-
-	class value_compare
-	{
-
-	public:
-
-		typedef bool		result_type;
-		typedef value_type	first_argument_type;
-		typedef value_type	second_argument_type;
-
-	public:
-
-		Cmp	comp;
-
-		value_compare( Cmp c = Cmp() ): comp(c) { return ; }
-
-	public:
-
-		bool operator()( const value_type& lhs, const value_type& rhs ) const
-		{
-			return comp(lhs.first, rhs.first);
-		}
-
-	};
-
+	typedef tree<Key, Cmp, Allocator>			tree_type;
 
 public:
 
-	explicit map( const key_compare &cmp = key_compare(),
+	explicit set( const key_compare &cmp = key_compare(),
 			const Allocator &alloc = Allocator() ):
 		_comparator(cmp), _valueAlloc(alloc)
 	{
 		return;
 	}
 	template< typename InputIt >
-	map( InputIt first, InputIt last, const key_compare &cmp = key_compare(),
+	set( InputIt first, InputIt last, const key_compare &cmp = key_compare(),
 			const Allocator &alloc = Allocator() ):
 		_comparator(cmp), _valueAlloc(alloc)
 	{
 		this->insert(first, last);
 	}
-	map( const map& other )
+	set( const set& other )
 	{
 		this->_rbTree = other._rbTree;
 		this->_comparator = other._comparator;
 		this->_valueAlloc = other._valueAlloc;
 	}
-	~map( void )
+	~set( void )
 	{
 	}
 
-	map	&operator=( const map& other )
+	set	&operator=( const set& other )
 	{
 		if (this == &other)
 			return *this;
@@ -107,25 +80,6 @@ public:
 		this->_comparator = other._comparator;
 		this->_valueAlloc = other._valueAlloc;
 		return *this;
-	}
-
-	mapped_type&	operator[]( const key_type& key )
-	{
-		return (*((this->insert(ft::make_pair(key, mapped_type()))).first)).second;
-	}
-	mapped_type&	at( const key_type& key )
-	{
-		if (this->alreadyExists(key))
-			throw std::out_of_range("key is out_of_range");
-		else
-			return (*this)[key];
-	}
-	const mapped_type&	at( const key_type& key) const
-	{
-		if (this->alreadyExists(key))
-			throw std::out_of_range("key is out_of_range");
-		else
-			return (*this)[key];
 	}
 
 	iterator	begin( void )
@@ -166,83 +120,80 @@ public:
 	size_type	max_size( void ) const { return _rbTree.max_size(); }
 
 	key_compare		key_comp( void ) const { return this->_comparator; }
-	value_compare	value_comp() const
-	{
-		return value_compare(key_comp());
-	}
+	value_compare	value_comp() const { return value_compare(key_comp()); }
 	allocator_type	get_allocator( void ) const { return this->_valueAlloc; }
 
-	iterator		find( const key_type& key )
+	iterator		find( key_type key )
 	{
-		node<const Key, T, Cmp, Allocator>	*result = _rbTree.findNode(key);
+		node<Key, Cmp, Allocator>	*result = _rbTree.findNode(key);
 
 		if (result->isNil())
 			return this->end();
 		return iterator(result);
 	}
-	const_iterator	find( const key_type& key ) const
+	const_iterator	find( key_type key ) const
 	{
-		node<const Key, T, Cmp, Allocator>	*result = _rbTree.findNode(key);
+		node<Key, Cmp, Allocator>	*result = _rbTree.findNode(key);
 
 		if (result->isNil())
 			return this->end();
 		return const_iterator(result);
 	}
-	size_type	count( const key_type& key ) const
+	size_type	count( key_type key ) const
 	{
 		if (_rbTree.findNode(key)->isNil())
 			return 0;
 		return 1;
 	}
-	iterator		lower_bound( const key_type& key )
+	iterator		lower_bound( key_type key )
 	{
-		node<const Key, T, Cmp, Allocator>	*result = _rbTree.lower_bound(key);
+		node<Key, Cmp, Allocator>	*result = _rbTree.lower_bound(key);
 
 		if (result->isNil())
 			return this->end();
 		return iterator(result);
 	}
-	const_iterator		lower_bound( const key_type& key ) const
+	const_iterator		lower_bound( key_type key ) const
 	{
-		node<const Key, T, Cmp, Allocator>	*result = _rbTree.lower_bound(key);
+		node<Key, Cmp, Allocator>	*result = _rbTree.lower_bound(key);
 
 		if (result->isNil())
 			return this->end();
 		return const_iterator(result);
 	}
-	iterator		upper_bound( const key_type& key )
+	iterator		upper_bound( key_type key )
 	{
-		node<const Key, T, Cmp, Allocator>	*result = _rbTree.upper_bound(key);
+		node<Key, Cmp, Allocator>	*result = _rbTree.upper_bound(key);
 
 		if (result->isNil())
 			return this->end();
 		return iterator(result);
 	}
-	const_iterator		upper_bound( const key_type& key ) const
+	const_iterator		upper_bound( key_type key ) const
 	{
-		node<const Key, T, Cmp, Allocator>	*result = _rbTree.upper_bound(key);
+		node<Key, Cmp, Allocator>	*result = _rbTree.upper_bound(key);
 
 		if (result->isNil())
 			return this->end();
 		return const_iterator(result);
 	}
-	ft::pair<iterator, iterator>	equal_range( const key_type& key )
+	std::pair<iterator, iterator>	equal_range( key_type key )
 	{
-		return ft::make_pair(this->lower_bound(key), this->upper_bound(key));
+		return std::make_pair(this->lower_bound(key), this->upper_bound(key));
 	}
-	ft::pair<const_iterator, const_iterator>	equal_range( const key_type& key ) const
+	std::pair<const_iterator, const_iterator>	equal_range( key_type& key ) const
 	{
-		return ft::make_pair(this->lower_bound(key), this->upper_bound(key));
+		return std::make_pair(this->lower_bound(key), this->upper_bound(key));
 	}
 
-	ft::pair<iterator, bool>	insert( const value_type& value )
+	std::pair<iterator, bool>	insert( value_type value )
 	{
 		bool		wasInserted = false;
 		iterator	inserted = this->_rbTree.insertValue(value, wasInserted);
 
-		return ft::make_pair(iterator(inserted), wasInserted);
+		return std::make_pair(iterator(inserted), wasInserted);
 	}
-	iterator	insert( iterator position, const value_type& value )
+	iterator	insert( iterator position, value_type value )
 	{
 		bool placeholder = false;
 
@@ -272,7 +223,7 @@ public:
 		while (first != last)
 			this->_rbTree.eraseNode((first++).getNode());
 	}
-	size_type	erase( const key_type& key )
+	size_type	erase( key_type key )
 	{
 		return this->_rbTree.eraseNodeFromKey(key);
 	}
@@ -282,7 +233,7 @@ public:
 		this->_rbTree.clear();
 	}
 
-	void	swap( map& other )
+	void	swap( set& other )
 	{
 		allocator_type				tmp_valueAlloc = other._valueAlloc;
 		key_compare					tmp_comparator = other._comparator;
@@ -294,7 +245,7 @@ public:
 		this->_rbTree.swap(other._rbTree);
 	}
 
-	friend bool	operator==( const map &lhs, const map &rhs )
+	friend bool	operator==( const set &lhs, const set &rhs )
 	{
 		iterator	lhs_it = lhs.begin();
 		iterator	lhs_ite = lhs.end();
@@ -312,11 +263,11 @@ public:
 			return false;
 		return true;
 	}
-	friend bool	operator!=( const map &lhs, const map &rhs )
+	friend bool	operator!=( const set &lhs, const set &rhs )
 	{
 		return !(lhs == rhs);
 	}
-	friend bool	operator<( const map &lhs, const map &rhs )
+	friend bool	operator<( const set &lhs, const set &rhs )
 	{
 		iterator	lhs_it = lhs.begin();
 		iterator	lhs_ite = lhs.end();
@@ -334,19 +285,19 @@ public:
 			return false;
 		return true;
 	}
-	friend bool	operator>( const map &lhs, const map &rhs )
+	friend bool	operator>( const set &lhs, const set &rhs )
 	{
 		return rhs < lhs;
 	}
-	friend bool	operator<=( const map &lhs, const map &rhs )
+	friend bool	operator<=( const set &lhs, const set &rhs )
 	{
 		return !(lhs > rhs);
 	}
-	friend bool	operator>=( const map &lhs, const map &rhs )
+	friend bool	operator>=( const set &lhs, const set &rhs )
 	{
 		return !(lhs < rhs);
 	}
-	friend void	swap( map &rhs, map &lhs )
+	friend void	swap( set &rhs, set &lhs )
 	{
 		lhs.swap(rhs);
 	}
@@ -362,7 +313,7 @@ private:
 	key_compare		_comparator;
 	allocator_type	_valueAlloc;
 
-	bool	alreadyExists( const key_type& key ) const
+	bool	alreadyExists( key_type& key ) const
 	{
 		return _rbTree.findNode(key)->isNil();
 	}

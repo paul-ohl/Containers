@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tree.hpp                                           :+:      :+:    :+:   */
+/*   set_tree.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/08 08:52:10 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/16 16:56:10 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/17 10:42:03 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,22 @@
 #include <iostream>
 
 # include <fstream>
-# include "pair.hpp"
-# include "node.hpp"
+# include "set_node.hpp"
 
 namespace ft
 {
 
-template< typename Key, typename T, typename Cmp = std::less<Key>,
-	typename Allocator = std::allocator<pair<const Key, T> > >
+template< typename Key, typename Cmp = std::less<Key>,
+	typename Allocator = std::allocator<Key> >
 class tree
 {
 
 public:
 
-	typedef node<const Key, T, Cmp, Allocator>	node;
-	typedef Key									key_type;
-	typedef T									mapped_type;
-	typedef ft::pair<const Key, T>				value_type;
-	typedef std::size_t							size_type;
+	typedef node<Key, Cmp, Allocator>	node;
+	typedef Key							key_type;
+	typedef Key							value_type;
+	typedef std::size_t					size_type;
 
 	tree( void ):
 		_root(NULL), _size(0), _comparator(Cmp()), _valueAlloc(Allocator())
@@ -85,19 +83,18 @@ public:
 	{
 		this->rotateSide(hinge, RIGHT);
 	}
-	node*	insertValue( const value_type& value, bool &wasInserted )
+	node*	insertValue( value_type& value, bool &wasInserted )
 	{
-		node	*insertionParent = getInsertionParent(value.first);
+		node	*insertionParent = getInsertionParent(value);
 
 		return insertValue(insertionParent, value, wasInserted);
 	}
-	node*	insertValue( node* insertionParent, const value_type& value,
+	node*	insertValue( node* insertionParent, value_type& value,
 			bool &wasInserted )
 	{
 		node	*nodeToInsert;
 
-		if (value.first == insertionParent->getKey()
-				&& !insertionParent->isNil())
+		if (value == insertionParent->getKey() && !insertionParent->isNil())
 		{
 			wasInserted = false;
 			return insertionParent;
@@ -115,7 +112,7 @@ public:
 		wasInserted = true;
 		return nodeToInsert;
 	}
-	size_type	eraseNodeFromKey( const key_type& key )
+	size_type	eraseNodeFromKey( key_type& key )
 	{
 		node	*foundNode = this->findNode(key);
 		if (foundNode->isNil())
@@ -165,11 +162,11 @@ public:
 		deleteNode(toDelete);
 	}
 
-	node*	findNode( const key_type& key )
+	node*	findNode( key_type& key )
 	{
 		return this->findNode( this->_root, key );
 	}
-	node*	findNode( node* current_node, const key_type& key )
+	node*	findNode( node* current_node, key_type& key )
 	{
 		if (current_node->isNil() || current_node->getKey() == key)
 			return current_node;
@@ -177,11 +174,11 @@ public:
 			return this->findNode(current_node->leftChild, key);
 		return this->findNode(current_node->rightChild, key);
 	}
-	node*	findNode( const key_type& key ) const
+	node*	findNode( key_type& key ) const
 	{
 		return this->findNode(this->_root, key);
 	}
-	node*	findNode( node* current_node, const key_type& key ) const
+	node*	findNode( node* current_node, key_type& key ) const
 	{
 		if (current_node->isNil() || current_node->getKey() == key)
 			return current_node;
@@ -189,15 +186,15 @@ public:
 			return this->findNode(current_node->leftChild, key);
 		return this->findNode(current_node->rightChild, key);
 	}
-	node*	lower_bound( const key_type& key )
+	node*	lower_bound( key_type& key )
 	{
 		return this->lower_bound(this->_root, key);
 	}
-	node*	lower_bound( const key_type& key ) const
+	node*	lower_bound( key_type& key ) const
 	{
 		return this->lower_bound(this->_root, key);
 	}
-	node*	lower_bound( node* current_node, const key_type& key)
+	node*	lower_bound( node* current_node, key_type& key)
 	{
 		node *tmp = this->nil;
 
@@ -210,7 +207,7 @@ public:
 			return current_node;
 		return tmp;
 	}
-	node*	lower_bound( node* current_node, const key_type& key) const
+	node*	lower_bound( node* current_node, key_type& key) const
 	{
 		node *tmp = this->nil;
 
@@ -223,15 +220,15 @@ public:
 			return current_node;
 		return tmp;
 	}
-	node*	upper_bound( const key_type& key )
+	node*	upper_bound( key_type& key )
 	{
 		return this->upper_bound(this->_root, key);
 	}
-	node*	upper_bound( const key_type& key ) const
+	node*	upper_bound( key_type& key ) const
 	{
 		return this->upper_bound(this->_root, key);
 	}
-	node*	upper_bound( node* current_node, const key_type& key)
+	node*	upper_bound( node* current_node, key_type& key)
 	{
 		node *tmp = this->nil;
 
@@ -244,7 +241,7 @@ public:
 			return current_node;
 		return tmp;
 	}
-	node*	upper_bound( node* current_node, const key_type& key) const
+	node*	upper_bound( node* current_node, key_type& key) const
 	{
 		node *tmp = this->nil;
 
@@ -404,7 +401,7 @@ private:
 
 	void	initializeNil( void )
 	{
-		value_type	nilValue = ft::make_pair(Key(), T());
+		value_type	nilValue = Key();
 
 		this->nil = this->newNode(nilValue);
 		this->nil->color = BLACK;
@@ -445,7 +442,7 @@ private:
 			movedNode->rightChild = hinge;
 		hinge->parent = movedNode;
 	}
-	node*	getInsertionParent( const key_type &insertKey )
+	node*	getInsertionParent( key_type &insertKey )
 	{
 		node*	traversingTree = this->_root;
 		node*	result = this->nil;
@@ -468,7 +465,8 @@ private:
 
 		while (lastInsertedNode->parent->color == RED)
 		{
-			if (lastInsertedNode->parent == lastInsertedNode->parent->parent->leftChild)
+			if (lastInsertedNode->parent
+					== lastInsertedNode->parent->parent->leftChild)
 			{
 				tmp = lastInsertedNode->parent->parent->rightChild;
 				if (tmp->color == RED)
@@ -480,7 +478,8 @@ private:
 				}
 				else
 				{
-					if (lastInsertedNode == lastInsertedNode->parent->rightChild)
+					if (lastInsertedNode
+							== lastInsertedNode->parent->rightChild)
 					{
 						lastInsertedNode = lastInsertedNode->parent;
 						this->rotateLeft(lastInsertedNode);
@@ -515,7 +514,7 @@ private:
 		}
 		this->_root->color = BLACK;
 	}
-	node*	newNode( const value_type &value )
+	node*	newNode( value_type &value )
 	{
 		node	*newNode = _nodeAlloc.allocate(1);
 

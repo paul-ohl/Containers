@@ -11,7 +11,7 @@ D		= deps/
 NAME	= ft_containers
 
 # list of your source files
-SRCS	= main.cpp map_tests.cpp vector_tests.cpp stack_tests.cpp
+SRCS	= main.cpp set_tests.cpp
 
 # Compiler stuff
 CC		= clang++
