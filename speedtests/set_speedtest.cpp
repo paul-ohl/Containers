@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map_speedtest.cpp                                  :+:      :+:    :+:   */
+/*   set_speedtest.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pohl <pohl@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/31 18:02:27 by pohl              #+#    #+#             */
-/*   Updated: 2022/02/17 11:41:46 by pohl             ###   ########.fr       */
+/*   Updated: 2022/02/17 11:42:31 by pohl             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,21 @@
 #endif
 
 #if IS_STD == 1
-	#include <map>
+	#include <set>
 	namespace ft = std;
 #else
-	#include "map.hpp"
+	#include "set.hpp"
 #endif
 
 int main( void )
 {
-	ft::map<int, char>				testedMap;
-	ft::map<int, char>::iterator	it, ite;
+	ft::set<int>				testedMap;
+	ft::set<int>::iterator	it, ite;
 
 	size_t				numberOfPushes = 5000000;
 
 	for (size_t i = 0; i < numberOfPushes; i++)
-		testedMap.insert(ft::make_pair(i, 'a'));
+		testedMap.insert(i);
 	it = testedMap.begin();
 	ite = testedMap.end();
 	while (it != ite)
