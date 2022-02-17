@@ -25,7 +25,7 @@ CPPUTEST	= YES
 
 ifeq ($(CPPUTEST), YES)
 	CPPUTEST_HOME	 = $(HOME)/.brew/Cellar/cpputest/4.0
-	CPPUTEST_HOME 	 = $(HOME)/Documents/42/cpputest
+	CPPUTEST_HOME 	 = ./cpputest
 	CFLAGS			+= -I$(CPPUTEST_HOME)/include/
 	CFLAGS			+= -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetectorNewMacros.h
 	LDFLAGS			 = -L$(CPPUTEST_HOME)/lib/ -lCppUTest -lCppUTestExt
