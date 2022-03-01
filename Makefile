@@ -29,7 +29,6 @@ ifeq ($(CPPUTEST), YES)
 	CFLAGS			+= -I$(CPPUTEST_HOME)/include/
 	CFLAGS			+= -include $(CPPUTEST_HOME)/include/CppUTest/MemoryLeakDetectorNewMacros.h
 	LDFLAGS			 = -L$(CPPUTEST_HOME)/lib/ -lCppUTest -lCppUTestExt
-	LDFLAGS			 = -L$(CPPUTEST_HOME)/cpputest_build/lib/ -lCppUTest -lCppUTestExt
 endif
 
 CFLAGS	+= $(addprefix -I,$I)

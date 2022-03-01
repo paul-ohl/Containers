@@ -1,0 +1,12 @@
+#!/bin/sh
+# Date: 2022/03/01
+# Description: Unzips and configures the cpputest library for my ft_containers
+#			   project.
+
+unzip cpputest-latest.zip > /dev/null
+mv cpputest-latest cpputest
+cd cpputest
+./configure
+make
+
+echo "Done!"
